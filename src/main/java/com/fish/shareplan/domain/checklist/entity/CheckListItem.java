@@ -16,8 +16,7 @@ public class CheckListItem {
 
     @Id
     @Column(name = "id", columnDefinition = "CHAR(36) DEFAULT UUID()")
-    @Builder.Default
-    private String id = UUID.randomUUID().toString();
+    private final String id = UUID.randomUUID().toString();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checklist_id", nullable = false)
@@ -30,9 +29,8 @@ public class CheckListItem {
     @Column(name = "is_checked", nullable = false)
     private boolean isChecked = false;
 
-    @Builder.Default
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private final LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder.Default
     @Column(name = "updated_at", nullable = false)
