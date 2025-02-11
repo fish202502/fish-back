@@ -110,4 +110,20 @@ public class ScheduleService {
 
         return scheduleItem.getId();
     }
+
+    // 일정 삭제
+    public boolean deleteSchedule(String roomCode, String url, String scheduleItemId) {
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+
+        // 쓰기 권한이 없을 경우
+        if (!room.getWriteUrl().equals(url)) {
+            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        scheduleItemRepository.deleteById(scheduleItemId);
+
+        return true;
+    }
 }
