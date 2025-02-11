@@ -91,14 +91,9 @@ public class ScheduleService {
             throw new PostException(ErrorCode.INVALID_START_END_TIME);
         }
 
-        Schedule foundSchedule = scheduleRepository.findById(scheduleUpdateRequestDto.getId())
+        ScheduleItem scheduleItem = scheduleItemRepository.findByScheduleId(scheduleUpdateRequestDto.getId())
                 .orElseThrow(
                         () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
-                );
-
-        ScheduleItem scheduleItem = scheduleItemRepository.findByScheduleId(foundSchedule.getId())
-                .orElseThrow(
-                        () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE,"아이템")
                 );
 
         scheduleItem.setTitle(scheduleUpdateRequestDto.getTitle());
