@@ -4,6 +4,8 @@ import com.fish.shareplan.domain.room.entity.Room;
 import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "schedules")
 @Builder
 public class Schedule {
 
@@ -25,4 +28,9 @@ public class Schedule {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "schedule",cascade = CascadeType.REMOVE,orphanRemoval = true) // fetchType default = LAZY
+    @Builder.Default
+    // 리스트 객체 선언해줘야함
+    private List<ScheduleItem> schedules = new ArrayList<>();
 }

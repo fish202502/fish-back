@@ -12,10 +12,12 @@ import com.fish.shareplan.repository.ScheduleItemRepository;
 import com.fish.shareplan.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleItemRepository scheduleItemRepository;
 
+    // 일정 추가
     public String addSchedule(String roomCode, String url, ScheduleRequestDto scheduleRequestDto) {
         Room room = roomRepository.findByRoomCode(roomCode).orElseThrow();
 
@@ -56,5 +59,16 @@ public class ScheduleService {
         );
 
         return schedule.getId();
+    }
+
+    // 일정 조회
+    public List<ScheduleResponseDto> getSchedule(String roomCode, String url) {
+
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+        String roomId = room.getId();
+
+        return scheduleRepository.findAllSchedule(roomId);
     }
 }

@@ -20,6 +20,9 @@ public enum ErrorCode {
     // 인증 관련
     UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
 
+    // 방 관련 에러
+    NOT_FOUND_CODE(HttpStatus.NOT_FOUND, "조회되지 않는 코드입니다."),
+
     // 포스트관련 에러
     INVALID_START_END_TIME(HttpStatus.BAD_REQUEST, "시작 시간이 종료 시간보다 늦을 수 없습니다.");
 
