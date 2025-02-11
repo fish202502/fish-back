@@ -117,6 +117,11 @@ public class ScheduleService {
             throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
 
+        // 일정이 존재하는 지 먼저 확인
+        ScheduleItem scheduleItem = scheduleItemRepository.findById(scheduleItemId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
+        );
+
         scheduleItemRepository.deleteById(scheduleItemId);
 
         return true;
