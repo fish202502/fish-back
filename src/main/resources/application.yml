@@ -40,7 +40,7 @@ logging:
         jpa: debug
     org:
       hibernate:
-        SQL: info
+        SQL: debug
 
 #  custom setting - file
 #  사용자가 올린 파일의 저장 경로

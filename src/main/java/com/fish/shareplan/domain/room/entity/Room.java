@@ -47,4 +47,5 @@ public class Room {
     public static String generateRoomCode() {
         return UUID.randomUUID().toString().substring(0, 8);
     }
+
 }
