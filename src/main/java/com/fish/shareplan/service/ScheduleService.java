@@ -5,6 +5,8 @@ import com.fish.shareplan.domain.schedule.dto.request.ScheduleRequestDto;
 import com.fish.shareplan.domain.schedule.dto.response.ScheduleResponseDto;
 import com.fish.shareplan.domain.schedule.entity.Schedule;
 import com.fish.shareplan.domain.schedule.entity.ScheduleItem;
+import com.fish.shareplan.exception.ErrorCode;
+import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.RoomRepository;
 import com.fish.shareplan.repository.ScheduleItemRepository;
 import com.fish.shareplan.repository.ScheduleRepository;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.ParseException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,12 +33,12 @@ public class ScheduleService {
 
         // 쓰기 권한이 없을 경우
         if (!room.getWriteUrl().equals(url)) {
-            throw new IllegalStateException("권한이 없습니다.");
+            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
         }
 
         // 시작시간이 종료시간보다 후일 경우
         if (scheduleRequestDto.getStartTime().isAfter(scheduleRequestDto.getEndTime())) {
-            throw new IllegalArgumentException("시작시간이 종료시간보다 후입니다.");
+            throw new PostException(ErrorCode.INVALID_START_END_TIME);
         }
 
         Schedule schedule = Schedule.builder()
