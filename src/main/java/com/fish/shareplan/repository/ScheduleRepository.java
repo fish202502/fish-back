@@ -1,9 +1,11 @@
 package com.fish.shareplan.repository;
 
+import com.fish.shareplan.domain.room.entity.Room;
 import com.fish.shareplan.domain.schedule.entity.Schedule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ScheduleRepository extends JpaRepository<Schedule,String>, ScheduleRepositoryCustom {
+import java.util.Optional;
 
+public interface ScheduleRepository extends JpaRepository<Schedule,String>, ScheduleRepositoryCustom {
 
 }

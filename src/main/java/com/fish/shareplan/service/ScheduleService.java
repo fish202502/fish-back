@@ -2,6 +2,7 @@ package com.fish.shareplan.service;
 
 import com.fish.shareplan.domain.room.entity.Room;
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleRequestDto;
+import com.fish.shareplan.domain.schedule.dto.request.ScheduleUpdateRequestDto;
 import com.fish.shareplan.domain.schedule.dto.response.ScheduleResponseDto;
 import com.fish.shareplan.domain.schedule.entity.Schedule;
 import com.fish.shareplan.domain.schedule.entity.ScheduleItem;
@@ -32,7 +33,9 @@ public class ScheduleService {
 
     // 일정 추가
     public String addSchedule(String roomCode, String url, ScheduleRequestDto scheduleRequestDto) {
-        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow();
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
 
         // 쓰기 권한이 없을 경우
         if (!room.getWriteUrl().equals(url)) {
@@ -70,5 +73,41 @@ public class ScheduleService {
         String roomId = room.getId();
 
         return scheduleRepository.findAllSchedule(roomId);
+    }
+
+    // 일정 추가
+    public String updateSchedule(String roomCode, String url, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+
+        // 쓰기 권한이 없을 경우
+        if (!room.getWriteUrl().equals(url)) {
+            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        // 시작시간이 종료시간보다 후일 경우
+        if (scheduleUpdateRequestDto.getStartTime().isAfter(scheduleUpdateRequestDto.getEndTime())) {
+            throw new PostException(ErrorCode.INVALID_START_END_TIME);
+        }
+
+        Schedule foundSchedule = scheduleRepository.findById(scheduleUpdateRequestDto.getId())
+                .orElseThrow(
+                        () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
+                );
+
+        ScheduleItem scheduleItem = scheduleItemRepository.findByScheduleId(foundSchedule.getId())
+                .orElseThrow(
+                        () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE,"아이템")
+                );
+
+        scheduleItem.setTitle(scheduleUpdateRequestDto.getTitle());
+        scheduleItem.setContent(scheduleUpdateRequestDto.getContent());
+        scheduleItem.setStartTime(scheduleUpdateRequestDto.getStartTime());
+        scheduleItem.setEndTime(scheduleUpdateRequestDto.getEndTime());
+
+        scheduleItemRepository.save(scheduleItem);
+
+        return scheduleItem.getId();
     }
 }
