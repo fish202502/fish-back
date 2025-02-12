@@ -33,14 +33,6 @@ public class ScheduleService {
 
     // 일정 추가
     public String addSchedule(String roomCode, String url, ScheduleRequestDto scheduleRequestDto) {
-        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
-                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
-        );
-
-        // 쓰기 권한이 없을 경우
-        if (!room.getWriteUrl().equals(url)) {
-            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
 
         // 시작시간이 종료시간보다 후일 경우
         if (scheduleRequestDto.getStartTime().isAfter(scheduleRequestDto.getEndTime())) {
@@ -48,7 +40,7 @@ public class ScheduleService {
         }
 
         Schedule schedule = Schedule.builder()
-                .room(room)
+                .room(isValid(roomCode,url))
                 .build();
         scheduleRepository.save(schedule);
         scheduleItemRepository.save(
@@ -75,16 +67,11 @@ public class ScheduleService {
         return scheduleRepository.findAllSchedule(roomId);
     }
 
-    // 일정 추가
+    // 일정 수정
     public String updateSchedule(String roomCode, String url, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
-        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
-                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
-        );
 
-        // 쓰기 권한이 없을 경우
-        if (!room.getWriteUrl().equals(url)) {
-            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
-        }
+        // 권한 체크
+        isValid(roomCode, url);
 
         // 시작시간이 종료시간보다 후일 경우
         if (scheduleUpdateRequestDto.getStartTime().isAfter(scheduleUpdateRequestDto.getEndTime())) {
@@ -125,5 +112,18 @@ public class ScheduleService {
         scheduleItemRepository.deleteById(scheduleItemId);
 
         return true;
+    }
+
+    //권한 체크 메서드
+    public Room isValid(String roomCode, String url) {
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+
+        // 쓰기 권한이 없을 경우
+        if (!room.getWriteUrl().equals(url)) {
+            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        return room;
     }
 }
