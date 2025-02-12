@@ -4,6 +4,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,6 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = {"receiptImages" ,"expense"})
 @Builder
 public class ExpenseItem {
 
@@ -20,7 +23,7 @@ public class ExpenseItem {
     private final String id = UUID.randomUUID().toString();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "amount_id", nullable = false)
+    @JoinColumn(name = "expense_id", nullable = false)
     private Expense expense;
 
     @Column(name = "spender", nullable = false, length = 255)
@@ -40,4 +43,8 @@ public class ExpenseItem {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "expenseItem",cascade = CascadeType.REMOVE,orphanRemoval = true)
+    @Builder.Default
+    private List<ReceiptImage> receiptImages = new ArrayList<>();
 }

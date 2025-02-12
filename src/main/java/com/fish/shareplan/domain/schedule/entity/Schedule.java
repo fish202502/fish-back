@@ -29,8 +29,7 @@ public class Schedule {
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "schedule",cascade = CascadeType.REMOVE,orphanRemoval = true) // fetchType default = LAZY
+    @OneToMany(mappedBy = "schedule",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default
-    // 리스트 객체 선언해줘야함
     private List<ScheduleItem> schedules = new ArrayList<>();
 }

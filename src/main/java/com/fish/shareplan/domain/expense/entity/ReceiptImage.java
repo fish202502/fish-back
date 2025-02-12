@@ -11,6 +11,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "expenseItem")
 @Builder
 public class ReceiptImage {
 
@@ -19,7 +20,7 @@ public class ReceiptImage {
     private final String id = UUID.randomUUID().toString();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "amount_item_id", nullable = false)
+    @JoinColumn(name = "expense_item_id", nullable = false)
     private ExpenseItem expenseItem;
 
     @Column(name = "image_url", nullable = false, length = 255)
