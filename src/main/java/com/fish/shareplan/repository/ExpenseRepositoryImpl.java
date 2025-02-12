@@ -105,8 +105,8 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryCustom {
                 expenseDto = new ExpenseResponseDto(expenseId, new ArrayList<>());
                 expenseMap.put(expenseId, expenseDto);
             }
-            if (!expenseDto.getExpenseItemDtoList().contains(itemDto)) {
-                expenseDto.getExpenseItemDtoList().add(itemDto);
+            if (!expenseDto.getExpenseItemList().contains(itemDto)) {
+                expenseDto.getExpenseItemList().add(itemDto);
             }
         });
         List<ExpenseResponseDto> expenses = new ArrayList<>(expenseMap.values());

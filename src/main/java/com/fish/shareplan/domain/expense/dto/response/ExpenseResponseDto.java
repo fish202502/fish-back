@@ -12,5 +12,5 @@ import java.util.List;
 @Builder
 public class ExpenseResponseDto {
     private String expenseId;
-    private List<ExpenseItemDto> expenseItemDtoList;
+    private List<ExpenseItemDto> expenseItemList;
 }
