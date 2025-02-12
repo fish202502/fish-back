@@ -1,5 +1,6 @@
 package com.fish.shareplan.domain.expense.entity;
 
+import com.fish.shareplan.domain.expense.dto.response.ReceiptDto;
 import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -28,4 +29,11 @@ public class ReceiptImage {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    public static ReceiptDto toDto(ReceiptImage receiptImage){
+        return ReceiptDto.builder()
+                .receiptId(receiptImage.id)
+                .url(receiptImage.imageUrl)
+                .build();
+    }
 }

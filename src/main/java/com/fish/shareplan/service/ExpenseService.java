@@ -1,14 +1,12 @@
 package com.fish.shareplan.service;
 
 import com.fish.shareplan.domain.expense.dto.request.ExpenseRequestDto;
+import com.fish.shareplan.domain.expense.dto.response.ExpenseCreateResponseDto;
 import com.fish.shareplan.domain.expense.dto.response.ExpenseResponseDto;
 import com.fish.shareplan.domain.expense.entity.Expense;
 import com.fish.shareplan.domain.expense.entity.ExpenseItem;
 import com.fish.shareplan.domain.expense.entity.ReceiptImage;
 import com.fish.shareplan.domain.room.entity.Room;
-import com.fish.shareplan.domain.schedule.dto.request.ScheduleRequestDto;
-import com.fish.shareplan.domain.schedule.entity.Schedule;
-import com.fish.shareplan.domain.schedule.entity.ScheduleItem;
 import com.fish.shareplan.exception.ErrorCode;
 import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.ExpenseItemRepository;
@@ -25,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -55,7 +54,7 @@ public class ExpenseService {
     }
 
     // 지출 추가
-    public ExpenseResponseDto addExpense(
+    public ExpenseCreateResponseDto addExpense(
             String roomCode, String url
             , List<MultipartFile> images
             , ExpenseRequestDto expenseRequestDto) {
@@ -79,13 +78,13 @@ public class ExpenseService {
             List<Map<String, String>> receiptIdList
                     = processImages(images, expenseRequestDto, expenseItem);
 
-            return ExpenseResponseDto.builder()
+            return ExpenseCreateResponseDto.builder()
                     .expenseId(expense.getId())
                     .expenseItemId(expenseItem.getId())
                     .receipt(receiptIdList)
                     .build();
         } else {
-            return ExpenseResponseDto.builder()
+            return ExpenseCreateResponseDto.builder()
                     .expenseId(expense.getId())
                     .expenseItemId(expenseItem.getId())
                     .build();
@@ -126,4 +125,20 @@ public class ExpenseService {
         }
         return receiptIdList;
     }
+
+    // 지출 조회
+    public List<ExpenseResponseDto> getExpense(String roomCode, String url) {
+
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+
+        String roomId = room.getId();
+
+        List<ExpenseResponseDto> expenseList = expenseRepository.findAllExpense(roomId);
+
+
+        return expenseList;
+    }
+
 }

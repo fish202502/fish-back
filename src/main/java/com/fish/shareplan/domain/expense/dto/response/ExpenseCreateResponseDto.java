@@ -3,6 +3,7 @@ package com.fish.shareplan.domain.expense.dto.response;
 import lombok.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -10,7 +11,11 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class ExpenseResponseDto {
+public class ExpenseCreateResponseDto {
+
     private String expenseId;
-    private List<ExpenseItemDto> expenseItemDtoList;
+
+    private String expenseItemId;
+
+    private List<Map<String,String>> receipt;
 }
