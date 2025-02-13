@@ -68,4 +68,17 @@ public class ExpenseController {
         return ResponseEntity.ok().body(expenseItemDto);
     }
 
+    // 지출 삭제
+    @DeleteMapping("/{roomCode}/{url}/{expenseId}")
+    public ResponseEntity<Map<String, Object>> deleteSchedule(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @PathVariable String expenseId
+    ) {
+
+        boolean deleted = expenseService.deleteSchedule(roomCode, url, expenseId);
+        return ResponseEntity.ok().body(Map.of(
+                "successes", deleted));
+    }
+
 }

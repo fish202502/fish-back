@@ -9,6 +9,7 @@ import com.fish.shareplan.domain.expense.entity.Expense;
 import com.fish.shareplan.domain.expense.entity.ExpenseItem;
 import com.fish.shareplan.domain.expense.entity.ReceiptImage;
 import com.fish.shareplan.domain.room.entity.Room;
+import com.fish.shareplan.domain.schedule.entity.ScheduleItem;
 import com.fish.shareplan.exception.ErrorCode;
 import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.ExpenseItemRepository;
@@ -170,4 +171,26 @@ public class ExpenseService {
 
         return ExpenseItem.toDto(expenseItem,expenseItem.getReceiptImages());
     }
+
+    // 지출 삭제
+    public boolean deleteSchedule(String roomCode, String url, String expenseId) {
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+
+        // 쓰기 권한이 없을 경우
+        if (!room.getWriteUrl().equals(url)) {
+            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        // 지출이 존재하는 지 먼저 확인
+        expenseRepository.findById(expenseId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_EXPENSE)
+        );
+
+        expenseRepository.deleteById(expenseId);
+
+        return true;
+    }
+
 }
