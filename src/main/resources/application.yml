@@ -36,8 +36,8 @@ logging:
   level:
     root: info
     com:
-      study:
-        jpa: debug
+      fish:
+        shareplan: debug
     org:
       hibernate:
         SQL: debug
