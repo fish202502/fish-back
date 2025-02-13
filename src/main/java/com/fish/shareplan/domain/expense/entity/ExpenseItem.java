@@ -2,6 +2,8 @@ package com.fish.shareplan.domain.expense.entity;
 
 import lombok.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,7 +44,8 @@ public class ExpenseItem {
     private LocalDateTime spentAt;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "expenseItem",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default

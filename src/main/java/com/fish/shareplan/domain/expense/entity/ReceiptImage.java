@@ -3,6 +3,8 @@ package com.fish.shareplan.domain.expense.entity;
 import com.fish.shareplan.domain.expense.dto.response.ReceiptDto;
 import lombok.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,7 +30,8 @@ public class ReceiptImage {
     private String imageUrl;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     public static ReceiptDto toDto(ReceiptImage receiptImage){
         return ReceiptDto.builder()

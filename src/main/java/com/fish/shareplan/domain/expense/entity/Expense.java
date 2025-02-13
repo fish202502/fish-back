@@ -3,6 +3,8 @@ package com.fish.shareplan.domain.expense.entity;
 import com.fish.shareplan.domain.room.entity.Room;
 import lombok.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,8 @@ public class Expense {
     private Room room;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "expense",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default

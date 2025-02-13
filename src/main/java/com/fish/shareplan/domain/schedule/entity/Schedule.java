@@ -3,6 +3,8 @@ package com.fish.shareplan.domain.schedule.entity;
 import com.fish.shareplan.domain.room.entity.Room;
 import lombok.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +28,9 @@ public class Schedule {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private  LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "schedule",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default
