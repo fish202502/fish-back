@@ -83,11 +83,7 @@ public class ScheduleService {
                         () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
                 );
 
-        scheduleItem.setTitle(scheduleUpdateRequestDto.getTitle());
-        scheduleItem.setContent(scheduleUpdateRequestDto.getContent());
-        scheduleItem.setStartTime(scheduleUpdateRequestDto.getStartTime());
-        scheduleItem.setEndTime(scheduleUpdateRequestDto.getEndTime());
-
+        scheduleItem.modify(scheduleUpdateRequestDto);
         scheduleItemRepository.save(scheduleItem);
 
         return scheduleItem.getId();

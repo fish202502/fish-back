@@ -1,5 +1,6 @@
 package com.fish.shareplan.domain.schedule.entity;
 
+import com.fish.shareplan.domain.schedule.dto.request.ScheduleUpdateRequestDto;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -47,5 +48,14 @@ public class ScheduleItem {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    // updated 편의 메서드
+    public void modify(ScheduleUpdateRequestDto dto){
+        this.title =dto.getTitle();
+        this.content = dto.getContent();
+        this.startTime = dto.getStartTime();
+        this.endTime = dto.getEndTime();
+        this.updatedAt = LocalDateTime.now();
+    }
 
 }
