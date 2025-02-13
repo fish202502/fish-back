@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 public class ExpenseItemDto {
 
-    private String expenseItemId;
+    private String expenseId;
 
     private String spender;
 
@@ -27,14 +27,4 @@ public class ExpenseItemDto {
     private LocalDateTime spendAt;
 
     private List<ReceiptDto> receiptList;
-
-    public static ExpenseItemDto from(Tuple tuple) {
-        return ExpenseItemDto.builder()
-                .expenseItemId(tuple.get(QExpenseItem.expenseItem.id))
-                .spender(tuple.get(QExpenseItem.expenseItem.spender))
-                .amount(tuple.get(QExpenseItem.expenseItem.amount))
-                .description(tuple.get(QExpenseItem.expenseItem.description))
-                .spendAt(tuple.get(QExpenseItem.expenseItem.spentAt))
-                .build();
-    }
 }

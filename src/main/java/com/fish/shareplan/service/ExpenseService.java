@@ -2,7 +2,9 @@ package com.fish.shareplan.service;
 
 import com.fish.shareplan.domain.expense.dto.request.ExpenseRequestDto;
 import com.fish.shareplan.domain.expense.dto.response.ExpenseCreateResponseDto;
+import com.fish.shareplan.domain.expense.dto.response.ExpenseItemDto;
 import com.fish.shareplan.domain.expense.dto.response.ExpenseResponseDto;
+import com.fish.shareplan.domain.expense.dto.response.ReceiptDto;
 import com.fish.shareplan.domain.expense.entity.Expense;
 import com.fish.shareplan.domain.expense.entity.ExpenseItem;
 import com.fish.shareplan.domain.expense.entity.ReceiptImage;
@@ -20,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,13 +79,13 @@ public class ExpenseService {
 
         // 이미지가 있을 때 영수증 이미지 처리
         if (images != null && !images.isEmpty()) {
-            List<Map<String, String>> receiptIdList
+            List<ReceiptImage> receiptList
                     = processImages(images, expenseRequestDto, expenseItem);
 
             return ExpenseCreateResponseDto.builder()
                     .expenseId(expense.getId())
                     .expenseItemId(expenseItem.getId())
-                    .receipt(receiptIdList)
+                    .receipt(receiptList.stream().map(ReceiptImage::toDto).toList())
                     .build();
         } else {
             return ExpenseCreateResponseDto.builder()
@@ -92,11 +96,11 @@ public class ExpenseService {
     }
 
     // 이미지 처리 메서드
-    private List<Map<String, String>> processImages(List<MultipartFile> images
+    private List<ReceiptImage> processImages(List<MultipartFile> images
             , ExpenseRequestDto expenseRequestDto, ExpenseItem expenseItem) {
         log.debug("start process Image!!");
 
-        List<Map<String, String>> receiptIdList = new ArrayList<>();
+        List<ReceiptImage> receiptList = new ArrayList<>();
         // 이미지들을 서버(/upload 폴더)에 저장
         if (images != null && !images.isEmpty()) {
             log.debug("save process Image!!");
@@ -116,14 +120,10 @@ public class ExpenseService {
                         .build();
 
                 receiptImageRepository.save(receiptImage);
-                receiptIdList.add(
-                        Map.of(
-                                "receiptId", receiptImage.getId(),
-                                "receiptUrl", receiptImage.getImageUrl()
-                        ));
+                receiptList.add(receiptImage);
             }
         }
-        return receiptIdList;
+        return receiptList;
     }
 
     // 지출 조회
@@ -135,10 +135,39 @@ public class ExpenseService {
 
         String roomId = room.getId();
 
-        List<ExpenseResponseDto> expenseList = expenseRepository.findAllExpense(roomId);
-
-
-        return expenseList;
+        return expenseRepository.findAllExpense(roomId);
     }
 
+    // 지출 내역 수정
+    public ExpenseItemDto updateExpense(
+            String roomCode, String url
+            , String expenseId
+            , List<MultipartFile> images
+            , ExpenseRequestDto expenseRequestDto) {
+
+        isValid(roomCode, url);
+
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_EXPENSE)
+        );
+        ExpenseItem expenseItem = expense.getExpenseItem();
+
+        // 이미지 수정이 필요할 때 삭제 후 다시 save
+        if(images != null && !images.isEmpty()){
+            receiptImageRepository.deleteByExpenseItemId(expenseItem.getId());
+            List<ReceiptImage> imageList = processImages(images, expenseRequestDto, expenseItem);
+
+            expenseItem.update(expenseRequestDto);
+
+            ExpenseItemDto dto = ExpenseItem.toDto(expenseItem);
+            dto.setReceiptList(imageList.stream().map(ReceiptImage::toDto).toList());
+
+            return dto;
+        }
+
+        expenseItem.update(expenseRequestDto);
+        expenseItemRepository.save(expenseItem);
+
+        return ExpenseItem.toDto(expenseItem,expenseItem.getReceiptImages());
+    }
 }

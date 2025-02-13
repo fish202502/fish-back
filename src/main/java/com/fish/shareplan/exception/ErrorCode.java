@@ -26,7 +26,11 @@ public enum ErrorCode {
     // 포스트관련 에러
     INVALID_START_END_TIME(HttpStatus.BAD_REQUEST, "시작 시간이 종료 시간보다 늦을 수 없습니다."),
 
-    NOT_FOUND_SCHEDULE(HttpStatus.NOT_FOUND, "조회되지 않는 일정입니다.")
+    // 일정관련
+    NOT_FOUND_SCHEDULE(HttpStatus.NOT_FOUND, "조회되지 않는 일정입니다."),
+
+    // 지출관련
+    NOT_FOUND_EXPENSE(HttpStatus.NOT_FOUND, "조회되지 않는 지출내역입니다.")
     ;
 
     private final HttpStatus status;

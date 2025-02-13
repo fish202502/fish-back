@@ -17,5 +17,5 @@ public class ExpenseCreateResponseDto {
 
     private String expenseItemId;
 
-    private List<Map<String,String>> receipt;
+    private List<ReceiptDto> receipt;
 }

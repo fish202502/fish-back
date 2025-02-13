@@ -1,5 +1,8 @@
 package com.fish.shareplan.domain.expense.entity;
 
+import com.fish.shareplan.domain.expense.dto.request.ExpenseRequestDto;
+import com.fish.shareplan.domain.expense.dto.response.ExpenseItemDto;
+import com.fish.shareplan.domain.expense.dto.response.ReceiptDto;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,8 +27,8 @@ public class ExpenseItem {
     @Column(name = "id", columnDefinition = "CHAR(36) DEFAULT UUID()")
     private final String id = UUID.randomUUID().toString();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "expense_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "expense_id", referencedColumnName = "id", nullable = false)
     private Expense expense;
 
     @Column(name = "spender", nullable = false, length = 255)
@@ -50,4 +53,32 @@ public class ExpenseItem {
     @OneToMany(mappedBy = "expenseItem",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default
     private List<ReceiptImage> receiptImages = new ArrayList<>();
+
+    public void update(ExpenseRequestDto dto){
+        this.amount = dto.getAmount();
+        this.spender = dto.getSpender();
+        this.description = dto.getDescription();
+        this.spentAt =  dto.getSpendAt();
+    }
+
+    public static ExpenseItemDto toDto(ExpenseItem expenseItem,List<ReceiptImage> receiptImages){
+        return ExpenseItemDto.builder()
+                .expenseId(expenseItem.expense.getId())
+                .spender(expenseItem.spender)
+                .amount(expenseItem.amount)
+                .description(expenseItem.description)
+                .spendAt(expenseItem.spentAt)
+                .receiptList(receiptImages.stream().map(ReceiptImage::toDto).toList())
+                .build();
+    }
+
+    public static ExpenseItemDto toDto(ExpenseItem expenseItem){
+        return ExpenseItemDto.builder()
+                .expenseId(expenseItem.expense.getId())
+                .spender(expenseItem.spender)
+                .amount(expenseItem.amount)
+                .description(expenseItem.description)
+                .spendAt(expenseItem.spentAt)
+                .build();
+    }
 }

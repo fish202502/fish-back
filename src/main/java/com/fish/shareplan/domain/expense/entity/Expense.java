@@ -32,7 +32,6 @@ public class Expense {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "expense",cascade = CascadeType.REMOVE,orphanRemoval = true)
-    @Builder.Default
-    private List<ExpenseItem> expenseItem = new ArrayList<>();
+    @OneToOne(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ExpenseItem expenseItem;
 }

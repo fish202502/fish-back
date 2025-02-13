@@ -39,10 +39,6 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryCustom {
                 .where(expense.room.id.eq(roomId))
                 .fetch();
 
-        // 데이터 변환 로직
-        Map<String, ExpenseResponseDto> expenseMap = new HashMap<>();
-        Map<String, ExpenseItemDto> expenseItemMap = new HashMap<>();
-
 //  [
 //    {
 //        "expenseId": "",
@@ -67,6 +63,10 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryCustom {
 //        ]
 //    }
 //    ]
+
+        // 데이터 변환 로직
+        Map<String, ExpenseResponseDto> expenseMap = new HashMap<>();
+        Map<String, ExpenseItemDto> expenseItemMap = new HashMap<>();
 
         tupleList.forEach(tuple -> {
             String expenseId = tuple.get(expense.id);
@@ -109,7 +109,6 @@ public class ExpenseRepositoryImpl implements ExpenseRepositoryCustom {
                 expenseDto.getExpenseItemList().add(itemDto);
             }
         });
-        List<ExpenseResponseDto> expenses = new ArrayList<>(expenseMap.values());
-        return expenses;
+        return new ArrayList<>(expenseMap.values());
     }
 }

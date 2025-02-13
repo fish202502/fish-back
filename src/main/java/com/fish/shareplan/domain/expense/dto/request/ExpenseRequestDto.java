@@ -15,7 +15,6 @@ import java.util.List;
 @ToString
 @Builder
 public class ExpenseRequestDto {
-    private String expenseId;
 
     private String spender;
 
