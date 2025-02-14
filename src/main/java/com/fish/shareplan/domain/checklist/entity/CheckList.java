@@ -31,6 +31,7 @@ public class CheckList {
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
 
+    @Builder.Default
     @OneToMany(mappedBy = "checklist",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<CheckListItem> checkListItem = new ArrayList<>();
 

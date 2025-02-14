@@ -48,4 +48,9 @@ public class Room {
         return UUID.randomUUID().toString().substring(0, 8);
     }
 
+    public void update(Room room){
+        this.roomCode = room.getRoomCode();
+        this.writeUrl = room.getWriteUrl();
+        this.readUrl = room.getReadUrl();
+    }
 }

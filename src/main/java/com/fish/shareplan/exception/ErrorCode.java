@@ -23,6 +23,7 @@ public enum ErrorCode {
 
     // 방 관련 에러
     NOT_FOUND_CODE(HttpStatus.NOT_FOUND, "조회되지 않는 코드입니다."),
+    INVALID_TYPE_NAME(HttpStatus.BAD_REQUEST, "잘못된 타입 이름입니다."),
 
     // 포스트관련 에러
     INVALID_START_END_TIME(HttpStatus.BAD_REQUEST, "시작 시간이 종료 시간보다 늦을 수 없습니다."),

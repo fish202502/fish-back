@@ -41,4 +41,16 @@ public class RoomController {
                 Map.of("permission",permission
                         ,"type",editPermission));
     }
+
+    // 방 url 변경
+    @PutMapping("/{roomCode}/{url}")
+    public ResponseEntity<RoomResponseDto> changeUrl(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @RequestParam String type
+    ){
+        RoomResponseDto roomResponseDto = roomService.changeUrl(roomCode, url, type);
+
+        return ResponseEntity.ok().body(roomResponseDto);
+    }
 }
