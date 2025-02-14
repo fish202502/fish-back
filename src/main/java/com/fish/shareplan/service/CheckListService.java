@@ -38,18 +38,32 @@ public class CheckListService {
 
         Room room = roomService.isValid(roomCode, url);
 
-        CheckList checkList = CheckListCreateRequestDto.toEntity(dto, room);
-        checkListRepository.save(checkList);
+        CheckList foundCheckList = checkListRepository.findByRoomId(room.getId()).orElse(null);
 
-        CheckListItem checkListItem = CheckListItem.builder()
-                .checklist(checkList)
-                .category(dto.getCategory())
-                .content(dto.getContent())
-                .build();
+        if (foundCheckList != null) {
+            CheckListItem checkListItem = CheckListItem.builder()
+                    .checklist(foundCheckList)
+                    .category(dto.getCategory())
+                    .content(dto.getContent())
+                    .build();
 
-        checkListItemRepository.save(checkListItem);
+            checkListItemRepository.save(checkListItem);
+            return CheckListItem.toDto(checkListItem);
 
-        return CheckListItem.toDto(checkListItem);
+            // 체크리스트가 최초 생성되었을때
+        } else {
+            CheckList checkList = CheckListCreateRequestDto.toEntity(dto, room);
+            checkListRepository.save(checkList);
+
+            CheckListItem checkListItem = CheckListItem.builder()
+                    .checklist(checkList)
+                    .category(dto.getCategory())
+                    .content(dto.getContent())
+                    .build();
+
+            checkListItemRepository.save(checkListItem);
+            return CheckListItem.toDto(checkListItem);
+        }
     }
 
     // 체크리스트 수정
@@ -69,17 +83,17 @@ public class CheckListService {
     }
 
     // 체크리스트 조회
-    public CheckListResponseDto getCheckList(
+    public List<CheckListItemResponseDto> getCheckList(
             String roomCode, String url
     ) {
         Room room = roomService.isValid(roomCode, url);
 
-        CheckList checkList = checkListRepository.findByRoomId(room.getId());
+        CheckList checkList = checkListRepository.findByRoomId(room.getId()).orElse(null);
 
-        return CheckListResponseDto.builder()
-                .checkListItem(checkList.getCheckListItem().stream()
-                        .map(CheckListItem::toDto).toList())
-                .checkListId(checkList.getId())
-                .build();
+        if (checkList != null) {
+            List<CheckListItem> checkListItem = checkList.getCheckListItem();
+            return checkListItem.stream().map(CheckListItem::toDto).toList();
+        }
+        return null;
     }
 }

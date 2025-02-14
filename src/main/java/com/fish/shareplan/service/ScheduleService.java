@@ -1,5 +1,8 @@
 package com.fish.shareplan.service;
 
+import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
+import com.fish.shareplan.domain.checklist.entity.CheckList;
+import com.fish.shareplan.domain.checklist.entity.CheckListItem;
 import com.fish.shareplan.domain.room.entity.Room;
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleRequestDto;
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleUpdateRequestDto;
@@ -32,28 +35,47 @@ public class ScheduleService {
     private final ScheduleItemRepository scheduleItemRepository;
 
     // 일정 추가
-    public String addSchedule(String roomCode, String url, ScheduleRequestDto scheduleRequestDto) {
+    public String addSchedule(String roomCode, String url, ScheduleRequestDto dto) {
 
         // 시작시간이 종료시간보다 후일 경우
-        if (scheduleRequestDto.getStartTime().isAfter(scheduleRequestDto.getEndTime())) {
+        if (dto.getStartTime().isAfter(dto.getEndTime())) {
             throw new PostException(ErrorCode.INVALID_START_END_TIME);
         }
 
-        Schedule schedule = Schedule.builder()
-                .room(isValid(roomCode,url))
-                .build();
-        scheduleRepository.save(schedule);
-        scheduleItemRepository.save(
-                ScheduleItem.builder()
-                        .title(scheduleRequestDto.getTitle())
-                        .content(scheduleRequestDto.getContent())
-                        .startTime(scheduleRequestDto.getStartTime())
-                        .endTime(scheduleRequestDto.getEndTime())
-                        .schedule(schedule)
-                        .build()
-        );
+        Room room = isValid(roomCode, url);
 
-        return schedule.getId();
+        Schedule foundSchedule = scheduleRepository.findByRoomId(room.getId()).orElse(null);
+
+        if (foundSchedule != null) {
+            ScheduleItem scheduleItem = ScheduleItem.builder()
+                    .title(dto.getTitle())
+                    .content(dto.getContent())
+                    .startTime(dto.getStartTime())
+                    .endTime(dto.getEndTime())
+                    .schedule(foundSchedule)
+                    .build();
+
+            scheduleItemRepository.save(scheduleItem);
+            return scheduleItem.getId();
+
+            // 체크리스트가 최초 생성되었을때
+        } else {
+            Schedule schedule = Schedule.builder()
+                    .room(isValid(roomCode,url))
+                    .build();
+            scheduleRepository.save(schedule);
+
+            ScheduleItem scheduleItem = ScheduleItem.builder()
+                    .title(dto.getTitle())
+                    .content(dto.getContent())
+                    .startTime(dto.getStartTime())
+                    .endTime(dto.getEndTime())
+                    .schedule(schedule)
+                    .build();
+
+            scheduleItemRepository.save(scheduleItem);
+            return scheduleItem.getId();
+        }
     }
 
     // 일정 조회
@@ -78,7 +100,7 @@ public class ScheduleService {
             throw new PostException(ErrorCode.INVALID_START_END_TIME);
         }
 
-        ScheduleItem scheduleItem = scheduleItemRepository.findByScheduleId(scheduleUpdateRequestDto.getId())
+        ScheduleItem scheduleItem = scheduleItemRepository.findById(scheduleUpdateRequestDto.getId())
                 .orElseThrow(
                         () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
                 );

@@ -64,36 +64,70 @@ public class ExpenseService {
             , List<MultipartFile> images
             , ExpenseRequestDto expenseRequestDto) {
 
-        Expense expense = Expense.builder()
-                .room(isValid(roomCode, url))
-                .build();
-        expenseRepository.save(expense);
 
-        ExpenseItem expenseItem = ExpenseItem.builder()
-                .expense(expense)
-                .amount(expenseRequestDto.getAmount())
-                .spender(expenseRequestDto.getSpender())
-                .description(expenseRequestDto.getDescription())
-                .spentAt(expenseRequestDto.getSpendAt())
-                .build();
-        expenseItemRepository.save(expenseItem);
+        Room room = isValid(roomCode, url);
 
-        // 이미지가 있을 때 영수증 이미지 처리
-        if (images != null && !images.isEmpty()) {
-            List<ReceiptImage> receiptList
-                    = processImages(images, expenseRequestDto, expenseItem);
+        Expense foundExpense = expenseRepository.findByRoomId(room.getId()).orElse(null);
 
-            return ExpenseCreateResponseDto.builder()
-                    .expenseId(expense.getId())
-                    .expenseItemId(expenseItem.getId())
-                    .receipt(receiptList.stream().map(ReceiptImage::toDto).toList())
+        if (foundExpense != null) {
+            ExpenseItem expenseItem = ExpenseItem.builder()
+                    .expense(foundExpense)
+                    .amount(expenseRequestDto.getAmount())
+                    .spender(expenseRequestDto.getSpender())
+                    .description(expenseRequestDto.getDescription())
+                    .spentAt(expenseRequestDto.getSpendAt())
                     .build();
+            expenseItemRepository.save(expenseItem);
+
+            // 이미지가 있을 때 영수증 이미지 처리
+            if (images != null && !images.isEmpty()) {
+                List<ReceiptImage> receiptList
+                        = processImages(images, expenseRequestDto, expenseItem);
+
+                return ExpenseCreateResponseDto.builder()
+                        .expenseId(foundExpense.getId())
+                        .expenseItemId(expenseItem.getId())
+                        .receipt(receiptList.stream().map(ReceiptImage::toDto).toList())
+                        .build();
+            } else {
+                return ExpenseCreateResponseDto.builder()
+                        .expenseId(foundExpense.getId())
+                        .expenseItemId(expenseItem.getId())
+                        .build();
+            }
         } else {
-            return ExpenseCreateResponseDto.builder()
-                    .expenseId(expense.getId())
-                    .expenseItemId(expenseItem.getId())
+            Expense newExpense = Expense.builder()
+                    .room(room)
                     .build();
+            expenseRepository.save(newExpense);
+
+            ExpenseItem expenseItem = ExpenseItem.builder()
+                    .expense(newExpense)
+                    .amount(expenseRequestDto.getAmount())
+                    .spender(expenseRequestDto.getSpender())
+                    .description(expenseRequestDto.getDescription())
+                    .spentAt(expenseRequestDto.getSpendAt())
+                    .build();
+            expenseItemRepository.save(expenseItem);
+
+            // 이미지가 있을 때 영수증 이미지 처리
+            if (images != null && !images.isEmpty()) {
+                List<ReceiptImage> receiptList
+                        = processImages(images, expenseRequestDto, expenseItem);
+
+                return ExpenseCreateResponseDto.builder()
+                        .expenseId(newExpense.getId())
+                        .expenseItemId(expenseItem.getId())
+                        .receipt(receiptList.stream().map(ReceiptImage::toDto).toList())
+                        .build();
+            } else {
+                return ExpenseCreateResponseDto.builder()
+                        .expenseId(newExpense.getId())
+                        .expenseItemId(expenseItem.getId())
+                        .build();
+            }
         }
+
     }
 
     // 이미지 처리 메서드
@@ -148,28 +182,27 @@ public class ExpenseService {
 
         isValid(roomCode, url);
 
-        Expense expense = expenseRepository.findById(expenseId).orElseThrow(
+        ExpenseItem expense = expenseItemRepository.findById(expenseId).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_EXPENSE)
         );
-        ExpenseItem expenseItem = expense.getExpenseItem();
 
         // 이미지 수정이 필요할 때 삭제 후 다시 save
-        if(images != null && !images.isEmpty()){
-            receiptImageRepository.deleteByExpenseItemId(expenseItem.getId());
-            List<ReceiptImage> imageList = processImages(images, expenseRequestDto, expenseItem);
+        if (images != null && !images.isEmpty()) {
+            receiptImageRepository.deleteByExpenseItemId(expense.getExpense().getId());
+            List<ReceiptImage> imageList = processImages(images, expenseRequestDto, expense);
 
-            expenseItem.update(expenseRequestDto);
+            expense.update(expenseRequestDto);
 
-            ExpenseItemDto dto = ExpenseItem.toDto(expenseItem);
+            ExpenseItemDto dto = ExpenseItem.toDto(expense);
             dto.setReceiptList(imageList.stream().map(ReceiptImage::toDto).toList());
 
             return dto;
         }
 
-        expenseItem.update(expenseRequestDto);
-        expenseItemRepository.save(expenseItem);
+        expense.update(expenseRequestDto);
+        expenseItemRepository.save(expense);
 
-        return ExpenseItem.toDto(expenseItem,expenseItem.getReceiptImages());
+        return ExpenseItem.toDto(expense, expense.getReceiptImages());
     }
 
     // 지출 삭제

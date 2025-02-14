@@ -27,7 +27,7 @@ public class ExpenseItem {
     @Column(name = "id", columnDefinition = "CHAR(36) DEFAULT UUID()")
     private final String id = UUID.randomUUID().toString();
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expense_id", referencedColumnName = "id", nullable = false)
     private Expense expense;
 

@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -47,11 +49,11 @@ public class CheckListController {
 
     // 체크리스트 조회
     @GetMapping("/{roomCode}/{url}")
-    public ResponseEntity<?> getCheckList(
+    public ResponseEntity<List<CheckListItemResponseDto>> getCheckList(
             @PathVariable String roomCode,
             @PathVariable String url
     ){
-        CheckListResponseDto checkList = checkListService.getCheckList(roomCode, url);
+        List<CheckListItemResponseDto> checkList = checkListService.getCheckList(roomCode, url);
 
         return ResponseEntity.ok().body(checkList);
     }
