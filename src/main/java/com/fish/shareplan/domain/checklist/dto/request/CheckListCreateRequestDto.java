@@ -17,7 +17,6 @@ public class CheckListCreateRequestDto {
     public static CheckList toEntity(CheckListCreateRequestDto dto, Room room){
         return CheckList.builder()
                 .room(room)
-                .category(dto.category)
                 .build();
     }
 }

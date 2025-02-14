@@ -39,6 +39,7 @@ public class CheckListService {
 
         CheckListItem checkListItem = CheckListItem.builder()
                 .checklist(checkList)
+                .category(dto.getCategory())
                 .content(dto.getContent())
                 .build();
 
@@ -46,7 +47,7 @@ public class CheckListService {
 
         return CheckListResponseDto.builder()
                 .checkListId(checkList.getId())
-                .category(checkList.getCategory())
+                .category(checkListItem.getCategory())
                 .content(checkListItem.getContent())
                 .isChecked(checkListItem.getIsChecked())
                 .build();
@@ -72,7 +73,7 @@ public class CheckListService {
 
         return CheckListResponseDto.builder()
                 .checkListId(checkListId)
-                .category(checkList.getCategory())
+                .category(checkListItem.getCategory())
                 .content(checkListItem.getContent())
                 .isChecked(checkListItem.getIsChecked())
                 .build();

@@ -22,9 +22,6 @@ public class CheckList {
     @Column(name = "id", columnDefinition = "CHAR(36) DEFAULT UUID()")
     private final String id = UUID.randomUUID().toString();
 
-    @Column(name = "category")
-    private String category;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
@@ -37,6 +34,5 @@ public class CheckList {
 
     public void update(CheckListRequestDto dto, CheckListItem checkListItem){
         this.checkListItem = checkListItem;
-        this.category = dto.getCategory();
     }
 }

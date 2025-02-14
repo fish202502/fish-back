@@ -27,6 +27,9 @@ public class CheckListItem {
     @JoinColumn(name = "checklist_id", referencedColumnName = "id", nullable = false)
     private CheckList checklist;
 
+    @Column(name = "category")
+    private String category;
+
     @Column(name = "content", nullable = false, length = 255)
     private String content;
 
@@ -44,6 +47,7 @@ public class CheckListItem {
 
     public void update(CheckListRequestDto dto){
         this.isChecked = dto.getIsChecked();
+        this.category = dto.getCategory();
         this.content = dto.getContent();
     }
 }
