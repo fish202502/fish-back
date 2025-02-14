@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -58,4 +59,16 @@ public class CheckListController {
         return ResponseEntity.ok().body(checkList);
     }
 
+    // 체크리스트 삭제
+    @DeleteMapping("/{roomCode}/{url}")
+    public ResponseEntity<Map<String, Object>> deleteCheckList(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @RequestParam String checkListItemId
+    ) {
+
+        boolean deleted = checkListService.deleteCheckList(roomCode, url, checkListItemId);
+        return ResponseEntity.ok().body(Map.of(
+                "successes", deleted));
+    }
 }

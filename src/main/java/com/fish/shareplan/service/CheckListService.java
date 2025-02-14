@@ -7,6 +7,7 @@ import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import com.fish.shareplan.domain.checklist.entity.CheckList;
 import com.fish.shareplan.domain.checklist.entity.CheckListItem;
 import com.fish.shareplan.domain.room.entity.Room;
+import com.fish.shareplan.domain.schedule.entity.ScheduleItem;
 import com.fish.shareplan.exception.ErrorCode;
 import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.CheckListItemRepository;
@@ -95,5 +96,19 @@ public class CheckListService {
             return checkListItem.stream().map(CheckListItem::toDto).toList();
         }
         return null;
+    }
+
+    // 체크리스트 삭제
+    public boolean deleteCheckList(String roomCode, String url, String checkListId) {
+        Room room = roomService.isValid(roomCode, url);
+
+        // 체크리스트가 존재하는 지 먼저 확인
+        CheckListItem checkListItem = checkListItemRepository.findById(checkListId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
+        );
+
+        checkListItemRepository.deleteById(checkListId);
+
+        return true;
     }
 }
