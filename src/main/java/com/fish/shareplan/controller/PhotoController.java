@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/fish/photo")
@@ -40,5 +41,18 @@ public class PhotoController {
         List<ImageUrlResponseDto> dtoList = photoService.getPhoto(roomCode, url);
 
         return ResponseEntity.ok().body(dtoList);
+    }
+
+    @DeleteMapping("/{roomCode}/{url}")
+    public ResponseEntity<?> deletePhoto(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @RequestParam String photoId
+    ){
+
+        boolean deleted = photoService.deletePhoto(roomCode, url, photoId);
+
+        return ResponseEntity.ok().body(Map.of(
+                "successes", deleted));
     }
 }

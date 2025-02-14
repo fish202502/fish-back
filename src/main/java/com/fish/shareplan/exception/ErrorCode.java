@@ -16,6 +16,7 @@ public enum ErrorCode {
     FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다."),
     INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 형식입니다."),
     FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 제한을 초과했습니다."),
+    NOT_FOUND_IMAGE_FILE(HttpStatus.NOT_FOUND, "조회되지 않는 지출내역입니다."),
 
     // 인증 관련
     UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),

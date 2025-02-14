@@ -41,11 +41,11 @@ public class PhotoService {
 
         Photo foundPhoto = photoRepository.findByRoomId(room.getId()).orElse(null);
 
-        if(foundPhoto != null){
+        if (foundPhoto != null) {
             List<ImageUrl> imageUrls = processImages(images, foundPhoto);
             return imageUrls.stream().map(ImageUrl::toDto).toList();
             // 처음 생성
-        }else{
+        } else {
             Photo photo = Photo.builder().room(room).build();
             photoRepository.save(photo);
             List<ImageUrl> imageUrls = processImages(images, photo);
@@ -55,7 +55,7 @@ public class PhotoService {
 
 
     // 이미지 처리 메서드
-    private List<ImageUrl> processImages(List<MultipartFile> images,Photo photo) {
+    private List<ImageUrl> processImages(List<MultipartFile> images, Photo photo) {
         log.debug("start process Image!!");
 
         List<ImageUrl> urlList = new ArrayList<>();
@@ -85,7 +85,7 @@ public class PhotoService {
     }
 
     // 사진첩 조회
-    public List<ImageUrlResponseDto> getPhoto(String roomCode, String url){
+    public List<ImageUrlResponseDto> getPhoto(String roomCode, String url) {
 
         Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_CODE)
@@ -93,11 +93,23 @@ public class PhotoService {
 
         Photo photo = photoRepository.findByRoomId(room.getId()).orElse(null);
 
-        if(photo != null){
+        if (photo != null) {
             List<ImageUrl> imageUrls = photo.getImageUrl();
             return imageUrls.stream().map(ImageUrl::toDto).toList();
-        }else {
+        } else {
             return new ArrayList<>();
         }
+    }
+
+    // 사진 삭제
+    public boolean deletePhoto(String roomCode, String url, String photoId) {
+
+        ImageUrl imageUrl = imageUrlRepository.findById(photoId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_IMAGE_FILE)
+        );
+
+        imageUrlRepository.deleteById(photoId);
+
+        return true;
     }
 }
