@@ -35,7 +35,7 @@ public class CheckListController {
     }
 
     // 체크리스트 수정
-    @PostMapping("/{roomCode}/{url}/{itemId}")
+    @PutMapping("/{roomCode}/{url}/{itemId}")
     public ResponseEntity<CheckListItemResponseDto> updateCheckList(
             @PathVariable String roomCode,
             @PathVariable String url,
