@@ -25,5 +25,6 @@ public class Photo {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
 }
 

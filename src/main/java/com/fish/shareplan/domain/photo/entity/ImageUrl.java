@@ -1,5 +1,6 @@
 package com.fish.shareplan.domain.photo.entity;
 
+import com.fish.shareplan.domain.photo.dto.respnse.ImageUrlResponseDto;
 import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Image {
+public class ImageUrl {
 
     @Id
     @Column(name = "id", columnDefinition = "CHAR(36) DEFAULT UUID()")
@@ -27,4 +28,11 @@ public class Image {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    public static ImageUrlResponseDto toDto(ImageUrl imageUrl){
+        return ImageUrlResponseDto.builder()
+                .imageId(imageUrl.id)
+                .url(imageUrl.imageUrl)
+                .build();
+    }
 }
