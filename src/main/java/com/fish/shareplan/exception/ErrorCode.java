@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     // 알 수 없는 서버오류
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"알 수 없는 서버 오류입니다. 점검 후 조치하겠습니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 서버 오류입니다. 점검 후 조치하겠습니다."),
 
     // File 관련 오류
     FILE_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다."),
@@ -30,7 +30,11 @@ public enum ErrorCode {
     NOT_FOUND_SCHEDULE(HttpStatus.NOT_FOUND, "조회되지 않는 일정입니다."),
 
     // 지출관련
-    NOT_FOUND_EXPENSE(HttpStatus.NOT_FOUND, "조회되지 않는 지출내역입니다.")
+    NOT_FOUND_EXPENSE(HttpStatus.NOT_FOUND, "조회되지 않는 지출내역입니다."),
+
+    // 체크리스트 관련
+    NOT_FOUND_CHECKLIST(HttpStatus.NOT_FOUND, "조회되지 않는 체크리스트입니다."),
+
     ;
 
     private final HttpStatus status;

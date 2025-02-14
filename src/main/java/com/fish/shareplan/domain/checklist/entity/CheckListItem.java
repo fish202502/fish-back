@@ -1,7 +1,12 @@
 package com.fish.shareplan.domain.checklist.entity;
 
+import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
+import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import lombok.*;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,8 +23,8 @@ public class CheckListItem {
     @Column(name = "id", columnDefinition = "CHAR(36) DEFAULT UUID()")
     private final String id = UUID.randomUUID().toString();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "checklist_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "checklist_id", referencedColumnName = "id", nullable = false)
     private CheckList checklist;
 
     @Column(name = "content", nullable = false, length = 255)
@@ -27,13 +32,18 @@ public class CheckListItem {
 
     @Builder.Default
     @Column(name = "is_checked", nullable = false)
-    private boolean isChecked = false;
+    private Boolean isChecked = false;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private final LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
-    @Builder.Default
+    @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime updatedAt;
 
+    public void update(CheckListRequestDto dto){
+        this.isChecked = dto.getIsChecked();
+        this.content = dto.getContent();
+    }
 }

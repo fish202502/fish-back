@@ -8,12 +8,12 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class CheckLIstResponseDto {
+public class CheckListResponseDto {
     private String checkListId;
 
     private String category;
 
     private String content;
 
-    private boolean isChecked;
+    private Boolean isChecked;
 }

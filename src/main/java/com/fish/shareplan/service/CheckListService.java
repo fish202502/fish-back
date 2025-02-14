@@ -1,6 +1,7 @@
 package com.fish.shareplan.service;
 
-import com.fish.shareplan.domain.checklist.dto.reponse.CheckLIstResponseDto;
+import com.fish.shareplan.domain.checklist.dto.reponse.CheckListResponseDto;
+import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import com.fish.shareplan.domain.checklist.entity.CheckList;
 import com.fish.shareplan.domain.checklist.entity.CheckListItem;
@@ -26,14 +27,14 @@ public class CheckListService {
     private final RoomService roomService;
 
     // 체크리스트 등록
-    public CheckLIstResponseDto addCheckList(
+    public CheckListResponseDto addCheckList(
             String roomCode, String url,
-            CheckListRequestDto dto
+            CheckListCreateRequestDto dto
     ) {
 
         Room room = roomService.isValid(roomCode, url);
 
-        CheckList checkList = CheckListRequestDto.toEntity(dto, room);
+        CheckList checkList = CheckListCreateRequestDto.toEntity(dto, room);
         checkListRepository.save(checkList);
 
         CheckListItem checkListItem = CheckListItem.builder()
@@ -43,11 +44,37 @@ public class CheckListService {
 
         checkListItemRepository.save(checkListItem);
 
-        return CheckLIstResponseDto.builder()
+        return CheckListResponseDto.builder()
                 .checkListId(checkList.getId())
                 .category(checkList.getCategory())
                 .content(checkListItem.getContent())
-                .isChecked(checkListItem.isChecked())
+                .isChecked(checkListItem.getIsChecked())
+                .build();
+    }
+
+    // 체크리스트 수정
+    public CheckListResponseDto updateCheckList(
+            String roomCode, String url, String checkListId
+            , CheckListRequestDto dto) {
+
+        roomService.isValid(roomCode, url);
+
+        CheckList checkList = checkListRepository.findById(checkListId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CHECKLIST)
+        );
+        CheckListItem checkListItem = checkList.getCheckListItem();
+        checkListItem.update(dto);
+
+        checkList.update(dto,checkListItem);
+
+        checkListRepository.save(checkList);
+        checkListItemRepository.save(checkListItem);
+
+        return CheckListResponseDto.builder()
+                .checkListId(checkListId)
+                .category(checkList.getCategory())
+                .content(checkListItem.getContent())
+                .isChecked(checkListItem.getIsChecked())
                 .build();
     }
 

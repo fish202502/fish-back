@@ -2,17 +2,22 @@ package com.fish.shareplan.domain.checklist.dto.request;
 
 import com.fish.shareplan.domain.checklist.entity.CheckList;
 import com.fish.shareplan.domain.room.entity.Room;
-
 import lombok.*;
 
-@Getter @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Builder
-public class CheckListRequestDto {
+public class CheckListCreateRequestDto {
     private String category;
     private String content;
-    private Boolean isChecked;
+
+    public static CheckList toEntity(CheckListCreateRequestDto dto, Room room){
+        return CheckList.builder()
+                .room(room)
+                .category(dto.category)
+                .build();
+    }
 }

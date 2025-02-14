@@ -1,6 +1,7 @@
 package com.fish.shareplan.controller;
 
-import com.fish.shareplan.domain.checklist.dto.reponse.CheckLIstResponseDto;
+import com.fish.shareplan.domain.checklist.dto.reponse.CheckListResponseDto;
+import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import com.fish.shareplan.service.CheckListService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +22,25 @@ public class CheckListController {
     public ResponseEntity<?> addCheckList(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @RequestBody CheckListRequestDto dto
-            ){
-        CheckLIstResponseDto checkLIstResponseDto = checkListService.addCheckList(roomCode, url, dto);
+            @RequestBody CheckListCreateRequestDto dto
+    ) {
+        CheckListResponseDto checkLIstResponseDto = checkListService.addCheckList(roomCode, url, dto);
 
         return ResponseEntity.ok().body(checkLIstResponseDto);
+    }
+
+    // 체크리스트 수정
+    @PostMapping("/{roomCode}/{url}/{itemId}")
+    public ResponseEntity<?> updateCheckList(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @PathVariable String itemId,
+            @RequestBody CheckListRequestDto dto
+    ) {
+        CheckListResponseDto checkListResponseDto = checkListService.updateCheckList(roomCode, url, itemId, dto);
+
+        return ResponseEntity.ok().body(checkListResponseDto);
+
     }
 
 }
