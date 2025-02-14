@@ -2,6 +2,8 @@ package com.fish.shareplan.domain.checklist.dto.reponse;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,9 +13,5 @@ import lombok.*;
 public class CheckListResponseDto {
     private String checkListId;
 
-    private String category;
-
-    private String content;
-
-    private Boolean isChecked;
+    private List<CheckListItemResponseDto> checkListItem;
 }

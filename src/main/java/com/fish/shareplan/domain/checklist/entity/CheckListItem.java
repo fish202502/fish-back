@@ -1,5 +1,6 @@
 package com.fish.shareplan.domain.checklist.entity;
 
+import com.fish.shareplan.domain.checklist.dto.reponse.CheckListItemResponseDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import lombok.*;
@@ -50,4 +51,12 @@ public class CheckListItem {
         this.category = dto.getCategory();
         this.content = dto.getContent();
     }
+
+    public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
+        return CheckListItemResponseDto.builder()
+                .category(checkListItem.getCategory())
+                .content(checkListItem.getContent())
+                .isChecked(checkListItem.getIsChecked())
+                .build();
+    };
 }

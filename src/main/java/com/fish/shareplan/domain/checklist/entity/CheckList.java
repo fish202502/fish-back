@@ -6,6 +6,8 @@ import com.fish.shareplan.domain.room.entity.Room;
 import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -30,9 +32,9 @@ public class CheckList {
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToOne(mappedBy = "checklist", cascade = CascadeType.ALL, orphanRemoval = true)
-    private CheckListItem checkListItem;
+    private List<CheckListItem> checkListItem = new ArrayList<>();
 
-    public void update(CheckListRequestDto dto, CheckListItem checkListItem){
+    public void update(CheckListRequestDto dto, List<CheckListItem> checkListItem){
         this.checkListItem = checkListItem;
     }
 }
