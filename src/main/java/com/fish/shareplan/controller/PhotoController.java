@@ -21,13 +21,23 @@ public class PhotoController {
 
     // 사진 등록
     @PostMapping("/{roomCode}/{url}")
-    public ResponseEntity<?> addPhoto(
+    public ResponseEntity<List<ImageUrlResponseDto>> addPhoto(
             @PathVariable String roomCode,
             @PathVariable String url,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
 
         List<ImageUrlResponseDto> dtoList = photoService.addPhoto(roomCode, url, images);
+
+        return ResponseEntity.ok().body(dtoList);
+    }
+
+    @GetMapping("/{roomCode}/{url}")
+    public ResponseEntity<List<ImageUrlResponseDto>> getPhoto(
+            @PathVariable String roomCode,
+            @PathVariable String url) {
+
+        List<ImageUrlResponseDto> dtoList = photoService.getPhoto(roomCode, url);
 
         return ResponseEntity.ok().body(dtoList);
     }

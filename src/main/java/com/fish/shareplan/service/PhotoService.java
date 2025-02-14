@@ -5,6 +5,8 @@ import com.fish.shareplan.domain.photo.dto.respnse.ImageUrlResponseDto;
 import com.fish.shareplan.domain.photo.entity.ImageUrl;
 import com.fish.shareplan.domain.photo.entity.Photo;
 import com.fish.shareplan.domain.room.entity.Room;
+import com.fish.shareplan.exception.ErrorCode;
+import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.ImageUrlRepository;
 import com.fish.shareplan.repository.PhotoRepository;
 import com.fish.shareplan.repository.RoomRepository;
@@ -80,5 +82,22 @@ public class PhotoService {
             }
         }
         return urlList;
+    }
+
+    // 사진첩 조회
+    public List<ImageUrlResponseDto> getPhoto(String roomCode, String url){
+
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+
+        Photo photo = photoRepository.findByRoomId(room.getId()).orElse(null);
+
+        if(photo != null){
+            List<ImageUrl> imageUrls = photo.getImageUrl();
+            return imageUrls.stream().map(ImageUrl::toDto).toList();
+        }else {
+            return new ArrayList<>();
+        }
     }
 }

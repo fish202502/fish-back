@@ -4,6 +4,8 @@ import com.fish.shareplan.domain.room.entity.Room;
 import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,6 +27,10 @@ public class Photo {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "photoAlbum")
+    private List<ImageUrl> imageUrl = new ArrayList<>();
 
 }
 
