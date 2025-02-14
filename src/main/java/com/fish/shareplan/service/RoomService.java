@@ -34,4 +34,17 @@ public class RoomService {
         // 쓰기 권한 - true / 읽기 권한 - false
         return url.equals(room.getWriteUrl());
     }
+
+    //권한 체크 메서드
+    public Room isValid(String roomCode, String url) {
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+        );
+
+        // 쓰기 권한이 없을 경우
+        if (!room.getWriteUrl().equals(url)) {
+            throw new PostException(ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+        return room;
+    }
 }
