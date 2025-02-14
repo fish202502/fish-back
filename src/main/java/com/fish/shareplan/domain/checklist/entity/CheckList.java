@@ -31,10 +31,10 @@ public class CheckList {
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToOne(mappedBy = "checklist", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "checklist",cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<CheckListItem> checkListItem = new ArrayList<>();
 
-    public void update(CheckListRequestDto dto, List<CheckListItem> checkListItem){
+    public void update(List<CheckListItem> checkListItem){
         this.checkListItem = checkListItem;
     }
 }

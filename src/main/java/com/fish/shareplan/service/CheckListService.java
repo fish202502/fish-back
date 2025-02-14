@@ -31,7 +31,7 @@ public class CheckListService {
     private final RoomService roomService;
 
     // 체크리스트 등록
-    public CheckListResponseDto addCheckList(
+    public CheckListItemResponseDto addCheckList(
             String roomCode, String url,
             CheckListCreateRequestDto dto
     ) {
@@ -49,54 +49,23 @@ public class CheckListService {
 
         checkListItemRepository.save(checkListItem);
 
-        List<CheckListItemResponseDto> checkListItemList = new ArrayList<>();
-
-        checkListItemList.add(
-                CheckListItemResponseDto.builder()
-                        .category(checkListItem.getCategory())
-                        .content(checkListItem.getContent())
-                        .isChecked(checkListItem.getIsChecked())
-                        .build());
-
-        ;
-        return CheckListResponseDto.builder()
-                .checkListId(checkList.getId())
-                .checkListItem(checkListItemList).build();
-
+        return CheckListItem.toDto(checkListItem);
     }
 
     // 체크리스트 수정
-    public CheckListResponseDto updateCheckList(
-            String roomCode, String url, String checkListId
+    public CheckListItemResponseDto updateCheckList(
+            String roomCode, String url, String checkListItemId
             , CheckListRequestDto dto) {
 
         roomService.isValid(roomCode, url);
 
-        CheckList checkList = checkListRepository.findById(checkListId).orElseThrow(
+        CheckListItem foundCheckList = checkListItemRepository.findById(checkListItemId).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_CHECKLIST)
         );
-        List<CheckListItem> checkListItem1 = checkList.getCheckListItem();
-        CheckListItem checkListItem = (CheckListItem) checkListItem1;
-        checkListItem.update(dto);
+        foundCheckList.update(dto);
 
-        checkList.update(dto, checkListItem);
+        return CheckListItem.toDto(foundCheckList);
 
-        checkListRepository.save(checkList);
-        checkListItemRepository.save(checkListItem);
-
-        List<CheckListItemResponseDto> checkListItemList = new ArrayList<>();
-
-        checkListItemList.add(
-                CheckListItemResponseDto.builder()
-                        .category(checkListItem.getCategory())
-                        .content(checkListItem.getContent())
-                        .isChecked(checkListItem.getIsChecked())
-                        .build());
-
-        ;
-        return CheckListResponseDto.builder()
-                .checkListId(checkList.getId())
-                .checkListItem(checkListItemList).build();
     }
 
     // 체크리스트 조회
@@ -113,6 +82,4 @@ public class CheckListService {
                 .checkListId(checkList.getId())
                 .build();
     }
-
-
 }

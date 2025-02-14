@@ -11,6 +11,8 @@ import lombok.*;
 @Builder
 public class CheckListItemResponseDto {
 
+    private String checkListItemId;
+
     private String category;
 
     private String content;

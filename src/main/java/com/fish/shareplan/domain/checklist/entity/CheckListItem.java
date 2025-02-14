@@ -24,7 +24,7 @@ public class CheckListItem {
     @Column(name = "id", columnDefinition = "CHAR(36) DEFAULT UUID()")
     private final String id = UUID.randomUUID().toString();
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "checklist_id", referencedColumnName = "id", nullable = false)
     private CheckList checklist;
 
@@ -54,9 +54,11 @@ public class CheckListItem {
 
     public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
         return CheckListItemResponseDto.builder()
+                .checkListItemId(checkListItem.getId())
                 .category(checkListItem.getCategory())
                 .content(checkListItem.getContent())
                 .isChecked(checkListItem.getIsChecked())
                 .build();
     };
+
 }
