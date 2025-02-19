@@ -1,6 +1,5 @@
 package com.fish.shareplan.domain.checklist.dto.reponse;
 
-import com.fish.shareplan.domain.checklist.entity.CheckListItem;
 import lombok.*;
 
 import java.util.List;
@@ -14,5 +13,5 @@ import java.util.List;
 public class CheckListResponseDto {
     private String checkListId;
 
-    private List<CheckListCategoryResponseDto> category;
+    private List<CategoryResponseDto> category;
 }

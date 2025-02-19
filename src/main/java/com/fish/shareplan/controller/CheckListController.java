@@ -1,20 +1,15 @@
 package com.fish.shareplan.controller;
 
-import com.fish.shareplan.domain.checklist.dto.reponse.CheckListCategoryResponseDto;
+import com.fish.shareplan.domain.checklist.dto.reponse.CategoryResponseDto;
 import com.fish.shareplan.domain.checklist.dto.reponse.CheckListItemResponseDto;
-import com.fish.shareplan.domain.checklist.dto.reponse.CheckListResponseDto;
-import com.fish.shareplan.domain.checklist.dto.request.CheckListCategoryRequestDto;
+import com.fish.shareplan.domain.checklist.dto.request.CategoryRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import com.fish.shareplan.service.CheckListService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,12 +21,12 @@ public class CheckListController {
 
         // 체크리스트 카테고리 추가
         @PostMapping("/category/{roomCode}/{url}")
-    public ResponseEntity<CheckListCategoryResponseDto> addCheckList(
+    public ResponseEntity<CategoryResponseDto> addCheckList(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @RequestBody CheckListCategoryRequestDto dto
+            @RequestBody CategoryRequestDto dto
     ) {
-        CheckListCategoryResponseDto checkListItemResponseDto
+        CategoryResponseDto checkListItemResponseDto
                 = checkListService.addCheckListCategory(roomCode, url, dto);
 
         return ResponseEntity.ok().body(checkListItemResponseDto);
@@ -49,19 +44,32 @@ public class CheckListController {
         return ResponseEntity.ok().body(checkListItemResponseDto);
     }
 
-//    // 체크리스트 수정
-//    @PutMapping("/{roomCode}/{url}/{itemId}")
-//    public ResponseEntity<CheckListItemResponseDto> updateCheckList(
-//            @PathVariable String roomCode,
-//            @PathVariable String url,
-//            @PathVariable String itemId,
-//            @RequestBody CheckListRequestDto dto
-//    ) {
-//        CheckListItemResponseDto checkListItemResponseDto = checkListService.updateCheckList(roomCode, url, itemId, dto);
-//
-//        return ResponseEntity.ok().body(checkListItemResponseDto);
-//
-//    }
+    // 체크리스트 카테고리 수정
+    @PutMapping("/category/{roomCode}/{url}")
+    public ResponseEntity<CategoryResponseDto> updateCheckList(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @RequestBody CategoryRequestDto dto
+    ) {
+        CategoryResponseDto categoryResponseDto
+                = checkListService.updateCategory(roomCode, url, dto);
+
+        return ResponseEntity.ok().body(categoryResponseDto);
+
+    }
+
+    // 체크리스트 수정
+    @PutMapping("/{roomCode}/{url}")
+    public ResponseEntity<CheckListItemResponseDto> updateCheckList(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @RequestBody CheckListRequestDto dto
+    ) {
+        CheckListItemResponseDto checkListItemResponseDto = checkListService.updateCheckList(roomCode, url, dto);
+
+        return ResponseEntity.ok().body(checkListItemResponseDto);
+
+    }
 
 //    // 체크리스트 조회
 //    @GetMapping("/{roomCode}/{url}")

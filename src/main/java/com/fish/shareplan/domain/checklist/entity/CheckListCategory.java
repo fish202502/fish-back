@@ -1,8 +1,7 @@
 package com.fish.shareplan.domain.checklist.entity;
 
-import com.fish.shareplan.domain.checklist.dto.reponse.CheckListCategoryResponseDto;
-import com.fish.shareplan.domain.checklist.dto.request.CheckListCategoryRequestDto;
-import com.fish.shareplan.domain.room.entity.Room;
+import com.fish.shareplan.domain.checklist.dto.reponse.CategoryResponseDto;
+import com.fish.shareplan.domain.checklist.dto.request.CategoryRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 
@@ -37,9 +36,22 @@ public class CheckListCategory {
     @Column(name = "content")
     private String content;
 
-    public static CheckListCategoryResponseDto toDto(CheckListCategory category) {
-        return CheckListCategoryResponseDto.builder()
+    public static CategoryResponseDto toDto(CheckListCategory category) {
+        return CategoryResponseDto.builder()
+                .content(category.getContent())
                 .categoryId(category.getId())
                 .build();
     }
+    public void update(CategoryRequestDto dto){
+        this.content = dto.getCategory();
+    }
+
+//    public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
+//        return CheckListItemResponseDto.builder()
+//                .checkListItemId(checkListItem.getId())
+//                .category(checkListItem.getCategory())
+//                .content(checkListItem.getContent())
+//                .isChecked(checkListItem.getIsChecked())
+//                .build();
+//    };
 }

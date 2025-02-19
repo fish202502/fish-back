@@ -8,6 +8,7 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class CheckListCategoryRequestDto {
-private String category;
+public class CreateCategoryRequestDto {
+private String categoryId;
+private  String content;
 }

@@ -10,9 +10,11 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class CheckListCategoryResponseDto {
+public class CategoryResponseDto {
 
     private String categoryId;
+
+    private String content;
 
     private List<CheckListItemResponseDto> checkListItemList;
 

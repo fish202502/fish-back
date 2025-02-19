@@ -15,6 +15,8 @@ public class CheckListItemResponseDto {
 
     private String category;
 
+    private String assignee;
+
     private String content;
 
     private Boolean isChecked;

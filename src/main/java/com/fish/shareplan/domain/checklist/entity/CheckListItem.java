@@ -46,19 +46,20 @@ public class CheckListItem {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-//    public void update(CheckListRequestDto dto){
-//        this.isChecked = dto.getIsChecked();
-//        this.category = dto.getCategory();
-//        this.content = dto.getContent();
-//    }
-//
-//    public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
-//        return CheckListItemResponseDto.builder()
-//                .checkListItemId(checkListItem.getId())
-//                .category(checkListItem.getCategory())
-//                .content(checkListItem.getContent())
-//                .isChecked(checkListItem.getIsChecked())
-//                .build();
-//    };
+    public void update(CheckListRequestDto dto){
+        this.isChecked = dto.getIsChecked();
+        this.assignee = dto.getAssignee();
+        this.content = dto.getContent();
+    }
+
+    public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
+        return CheckListItemResponseDto.builder()
+                .checkListItemId(checkListItem.getId())
+                .category(checkListItem.getCategory().getContent())
+                .assignee(checkListItem.getAssignee())
+                .content(checkListItem.getContent())
+                .isChecked(checkListItem.getIsChecked())
+                .build();
+    };
 
 }

@@ -14,7 +14,8 @@ import lombok.*;
 @ToString
 @Builder
 public class CheckListRequestDto {
-    private String category;
+    private String checkListItemId;
+    private String assignee;
     private String content;
     private Boolean isChecked;
 
