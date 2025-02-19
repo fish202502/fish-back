@@ -37,18 +37,18 @@ public class CheckListController {
         return ResponseEntity.ok().body(checkListItemResponseDto);
     }
 
-//    // 체크리스트 등록
-//    @PostMapping("/{roomCode}/{url}")
-//    public ResponseEntity<CheckListItemResponseDto> addCheckList(
-//            @PathVariable String roomCode,
-//            @PathVariable String url,
-//            @RequestBody CheckListCreateRequestDto dto
-//    ) {
-//        CheckListItemResponseDto checkListItemResponseDto = checkListService.addCheckList(roomCode, url, dto);
-//
-//        return ResponseEntity.ok().body(checkListItemResponseDto);
-//    }
-//
+    // 체크리스트 등록
+    @PostMapping("/{roomCode}/{url}")
+    public ResponseEntity<CheckListItemResponseDto> addCheckList(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @RequestBody CheckListCreateRequestDto dto
+    ) {
+        CheckListItemResponseDto checkListItemResponseDto = checkListService.addCheckList(roomCode, url, dto);
+
+        return ResponseEntity.ok().body(checkListItemResponseDto);
+    }
+
 //    // 체크리스트 수정
 //    @PutMapping("/{roomCode}/{url}/{itemId}")
 //    public ResponseEntity<CheckListItemResponseDto> updateCheckList(

@@ -36,6 +36,7 @@ public enum ErrorCode {
 
     // 체크리스트 관련
     NOT_FOUND_CHECKLIST(HttpStatus.NOT_FOUND, "조회되지 않는 체크리스트입니다."),
+    NOT_FOUND_CHECKLIST_CATEGORY(HttpStatus.NOT_FOUND, "조회되지 않는 체크리스트의 카테고리입니다."),
 
     ;
 

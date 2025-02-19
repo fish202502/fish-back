@@ -12,7 +12,8 @@ import lombok.*;
 @ToString
 @Builder
 public class CheckListCreateRequestDto {
-    private String category;
+    private String categoryId;
+    private String assignee;
     private String content;
 
     public static CheckList toEntity(Room room){
