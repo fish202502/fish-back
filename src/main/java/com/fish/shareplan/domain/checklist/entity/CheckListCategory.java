@@ -45,13 +45,4 @@ public class CheckListCategory {
     public void update(CategoryRequestDto dto){
         this.content = dto.getCategory();
     }
-
-//    public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
-//        return CheckListItemResponseDto.builder()
-//                .checkListItemId(checkListItem.getId())
-//                .category(checkListItem.getCategory())
-//                .content(checkListItem.getContent())
-//                .isChecked(checkListItem.getIsChecked())
-//                .build();
-//    };
 }

@@ -2,6 +2,7 @@ package com.fish.shareplan.controller;
 
 import com.fish.shareplan.domain.checklist.dto.reponse.CategoryResponseDto;
 import com.fish.shareplan.domain.checklist.dto.reponse.CheckListItemResponseDto;
+import com.fish.shareplan.domain.checklist.dto.reponse.CheckListResponseDto;
 import com.fish.shareplan.domain.checklist.dto.request.CategoryRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
@@ -10,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -71,17 +74,17 @@ public class CheckListController {
 
     }
 
-//    // 체크리스트 조회
-//    @GetMapping("/{roomCode}/{url}")
-//    public ResponseEntity<List<CheckListItemResponseDto>> getCheckList(
-//            @PathVariable String roomCode,
-//            @PathVariable String url
-//    ){
-//        List<CheckListItemResponseDto> checkList = checkListService.getCheckList(roomCode, url);
-//
-//        return ResponseEntity.ok().body(checkList);
-//    }
-//
+    // 체크리스트 조회
+    @GetMapping("/{roomCode}/{url}")
+    public ResponseEntity<CheckListResponseDto> getCheckList(
+            @PathVariable String roomCode,
+            @PathVariable String url
+    ){
+        CheckListResponseDto checkList = checkListService.getCheckList(roomCode, url);
+
+        return ResponseEntity.ok().body(checkList);
+    }
+
 //    // 체크리스트 삭제
 //    @DeleteMapping("/{roomCode}/{url}")
 //    public ResponseEntity<Map<String, Object>> deleteCheckList(
