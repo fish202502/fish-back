@@ -25,11 +25,11 @@ public class CheckListItem {
     private final String id = UUID.randomUUID().toString();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "checklist_id", referencedColumnName = "id", nullable = false)
-    private CheckList checklist;
+    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
+    private CheckListCategory category;
 
-    @Column(name = "category")
-    private String category;
+    @Column (name = "assignee")
+    private String assignee;
 
     @Column(name = "content", nullable = false, length = 255)
     private String content;
@@ -46,19 +46,19 @@ public class CheckListItem {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public void update(CheckListRequestDto dto){
-        this.isChecked = dto.getIsChecked();
-        this.category = dto.getCategory();
-        this.content = dto.getContent();
-    }
-
-    public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
-        return CheckListItemResponseDto.builder()
-                .checkListItemId(checkListItem.getId())
-                .category(checkListItem.getCategory())
-                .content(checkListItem.getContent())
-                .isChecked(checkListItem.getIsChecked())
-                .build();
-    };
+//    public void update(CheckListRequestDto dto){
+//        this.isChecked = dto.getIsChecked();
+//        this.category = dto.getCategory();
+//        this.content = dto.getContent();
+//    }
+//
+//    public static CheckListItemResponseDto toDto(CheckListItem checkListItem){
+//        return CheckListItemResponseDto.builder()
+//                .checkListItemId(checkListItem.getId())
+//                .category(checkListItem.getCategory())
+//                .content(checkListItem.getContent())
+//                .isChecked(checkListItem.getIsChecked())
+//                .build();
+//    };
 
 }

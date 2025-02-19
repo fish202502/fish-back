@@ -18,11 +18,11 @@ public class CheckListRequestDto {
     private String content;
     private Boolean isChecked;
 
-    public static CheckListItem toEntity(CheckListRequestDto dto){
-        return CheckListItem.builder()
-                .category(dto.getCategory())
-                .content(dto.getContent())
-                .isChecked(dto.getIsChecked())
-                .build();
-    }
+//    public static CheckListItem toEntity(CheckListRequestDto dto){
+//        return CheckListItem.builder()
+//                .category(dto.getCategory())
+//                .content(dto.getContent())
+//                .isChecked(dto.getIsChecked())
+//                .build();
+//    }
 }

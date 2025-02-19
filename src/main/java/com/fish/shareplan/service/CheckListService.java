@@ -31,84 +31,84 @@ public class CheckListService {
 
     private final RoomService roomService;
 
-    // 체크리스트 등록
-    public CheckListItemResponseDto addCheckList(
-            String roomCode, String url,
-            CheckListCreateRequestDto dto
-    ) {
+//    // 체크리스트 등록
+//    public CheckListItemResponseDto addCheckList(
+//            String roomCode, String url,
+//            CheckListCreateRequestDto dto
+//    ) {
+//
+//        Room room = roomService.isValid(roomCode, url);
+//
+//        CheckList foundCheckList = checkListRepository.findByRoomId(room.getId()).orElse(null);
+//
+//        if (foundCheckList != null) {
+//            CheckListItem checkListItem = CheckListItem.builder()
+////                    .checklist(foundCheckList)
+////                    .category(dto.getCategory())
+//                    .content(dto.getContent())
+//                    .build();
+//
+//            checkListItemRepository.save(checkListItem);
+//            return CheckListItem.toDto(checkListItem);
+//
+//            // 체크리스트가 최초 생성되었을때
+//        } else {
+//            CheckList checkList = CheckListCreateRequestDto.toEntity(dto, room);
+//            checkListRepository.save(checkList);
+//
+//            CheckListItem checkListItem = CheckListItem.builder()
+////                    .checklist(checkList)
+////                    .category(dto.getCategory())
+//                    .content(dto.getContent())
+//                    .build();
+//
+//            checkListItemRepository.save(checkListItem);
+//            return CheckListItem.toDto(checkListItem);
+//        }
+//    }
+//
+//    // 체크리스트 수정
+//    public CheckListItemResponseDto updateCheckList(
+//            String roomCode, String url, String checkListItemId
+//            , CheckListRequestDto dto) {
+//
+//        roomService.isValid(roomCode, url);
+//
+//        CheckListItem foundCheckList = checkListItemRepository.findById(checkListItemId).orElseThrow(
+//                () -> new PostException(ErrorCode.NOT_FOUND_CHECKLIST)
+//        );
+//        foundCheckList.update(dto);
+//
+//        return CheckListItem.toDto(foundCheckList);
+//
+//    }
 
-        Room room = roomService.isValid(roomCode, url);
-
-        CheckList foundCheckList = checkListRepository.findByRoomId(room.getId()).orElse(null);
-
-        if (foundCheckList != null) {
-            CheckListItem checkListItem = CheckListItem.builder()
-                    .checklist(foundCheckList)
-                    .category(dto.getCategory())
-                    .content(dto.getContent())
-                    .build();
-
-            checkListItemRepository.save(checkListItem);
-            return CheckListItem.toDto(checkListItem);
-
-            // 체크리스트가 최초 생성되었을때
-        } else {
-            CheckList checkList = CheckListCreateRequestDto.toEntity(dto, room);
-            checkListRepository.save(checkList);
-
-            CheckListItem checkListItem = CheckListItem.builder()
-                    .checklist(checkList)
-                    .category(dto.getCategory())
-                    .content(dto.getContent())
-                    .build();
-
-            checkListItemRepository.save(checkListItem);
-            return CheckListItem.toDto(checkListItem);
-        }
-    }
-
-    // 체크리스트 수정
-    public CheckListItemResponseDto updateCheckList(
-            String roomCode, String url, String checkListItemId
-            , CheckListRequestDto dto) {
-
-        roomService.isValid(roomCode, url);
-
-        CheckListItem foundCheckList = checkListItemRepository.findById(checkListItemId).orElseThrow(
-                () -> new PostException(ErrorCode.NOT_FOUND_CHECKLIST)
-        );
-        foundCheckList.update(dto);
-
-        return CheckListItem.toDto(foundCheckList);
-
-    }
-
-    // 체크리스트 조회
-    public List<CheckListItemResponseDto> getCheckList(
-            String roomCode, String url
-    ) {
-        Room room = roomService.isValid(roomCode, url);
-
-        CheckList checkList = checkListRepository.findByRoomId(room.getId()).orElse(null);
-
-        if (checkList != null) {
-            List<CheckListItem> checkListItem = checkList.getCheckListItem();
-            return checkListItem.stream().map(CheckListItem::toDto).toList();
-        }
-        return null;
-    }
-
-    // 체크리스트 삭제
-    public boolean deleteCheckList(String roomCode, String url, String checkListId) {
-        Room room = roomService.isValid(roomCode, url);
-
-        // 체크리스트가 존재하는 지 먼저 확인
-        CheckListItem checkListItem = checkListItemRepository.findById(checkListId).orElseThrow(
-                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
-        );
-
-        checkListItemRepository.deleteById(checkListId);
-
-        return true;
-    }
+//    // 체크리스트 조회
+//    public List<CheckListItemResponseDto> getCheckList(
+//            String roomCode, String url
+//    ) {
+//        Room room = roomService.isValid(roomCode, url);
+//
+//        CheckList checkList = checkListRepository.findByRoomId(room.getId()).orElse(null);
+//
+//        if (checkList != null) {
+//            List<CheckListItem> checkListItem = checkList.getCheckListItem();
+//            return checkListItem.stream().map(CheckListItem::toDto).toList();
+//        }
+//        return null;
+//    }
+//
+//    // 체크리스트 삭제
+//    public boolean deleteCheckList(String roomCode, String url, String checkListId) {
+//        Room room = roomService.isValid(roomCode, url);
+//
+//        // 체크리스트가 존재하는 지 먼저 확인
+//        CheckListItem checkListItem = checkListItemRepository.findById(checkListId).orElseThrow(
+//                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
+//        );
+//
+//        checkListItemRepository.deleteById(checkListId);
+//
+//        return true;
+//    }
 }

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "checkListItem")
+@ToString(exclude = "checkListCategories")
 @Builder
 public class CheckList {
 
@@ -32,10 +32,10 @@ public class CheckList {
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder.Default
-    @OneToMany(mappedBy = "checklist",cascade = CascadeType.REMOVE,orphanRemoval = true)
-    private List<CheckListItem> checkListItem = new ArrayList<>();
+    @OneToMany(mappedBy = "checkList",cascade = CascadeType.REMOVE,orphanRemoval = true)
+    private List<CheckListCategory> checkListCategories = new ArrayList<>();
 
-    public void update(List<CheckListItem> checkListItem){
-        this.checkListItem = checkListItem;
+    public void update(List<CheckListCategory> checkListCategories){
+        this.checkListCategories = checkListCategories;
     }
 }

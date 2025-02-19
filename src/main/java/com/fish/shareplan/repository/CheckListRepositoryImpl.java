@@ -15,10 +15,12 @@ public class CheckListRepositoryImpl implements CheckListRepositoryCustom {
 
     @Override
     public List<CheckList> findAllCheckList(String roomId) {
-        return factory.select(QCheckList.checkList)
-                .from(QCheckList.checkList)
-                .innerJoin(QCheckList.checkList, QCheckListItem.checkListItem.checklist)
-                .where(QCheckList.checkList.room.id.eq(roomId))
-                .fetch();
+
+        return null;
+//        return factory.select(QCheckList.checkList)
+//                .from(QCheckList.checkList)
+//                .innerJoin(QCheckList.checkList, QCheckListItem.checkListItem.checklist)
+//                .where(QCheckList.checkList.room.id.eq(roomId))
+//                .fetch();
     }
 }

@@ -22,53 +22,53 @@ public class CheckListController {
 
     private final CheckListService checkListService;
 
-    // 체크리스트 등록
-    @PostMapping("/{roomCode}/{url}")
-    public ResponseEntity<CheckListItemResponseDto> addCheckList(
-            @PathVariable String roomCode,
-            @PathVariable String url,
-            @RequestBody CheckListCreateRequestDto dto
-    ) {
-        CheckListItemResponseDto checkListItemResponseDto = checkListService.addCheckList(roomCode, url, dto);
+//    // 체크리스트 등록
+//    @PostMapping("/{roomCode}/{url}")
+//    public ResponseEntity<CheckListItemResponseDto> addCheckList(
+//            @PathVariable String roomCode,
+//            @PathVariable String url,
+//            @RequestBody CheckListCreateRequestDto dto
+//    ) {
+//        CheckListItemResponseDto checkListItemResponseDto = checkListService.addCheckList(roomCode, url, dto);
+//
+//        return ResponseEntity.ok().body(checkListItemResponseDto);
+//    }
+//
+//    // 체크리스트 수정
+//    @PutMapping("/{roomCode}/{url}/{itemId}")
+//    public ResponseEntity<CheckListItemResponseDto> updateCheckList(
+//            @PathVariable String roomCode,
+//            @PathVariable String url,
+//            @PathVariable String itemId,
+//            @RequestBody CheckListRequestDto dto
+//    ) {
+//        CheckListItemResponseDto checkListItemResponseDto = checkListService.updateCheckList(roomCode, url, itemId, dto);
+//
+//        return ResponseEntity.ok().body(checkListItemResponseDto);
+//
+//    }
 
-        return ResponseEntity.ok().body(checkListItemResponseDto);
-    }
-
-    // 체크리스트 수정
-    @PutMapping("/{roomCode}/{url}/{itemId}")
-    public ResponseEntity<CheckListItemResponseDto> updateCheckList(
-            @PathVariable String roomCode,
-            @PathVariable String url,
-            @PathVariable String itemId,
-            @RequestBody CheckListRequestDto dto
-    ) {
-        CheckListItemResponseDto checkListItemResponseDto = checkListService.updateCheckList(roomCode, url, itemId, dto);
-
-        return ResponseEntity.ok().body(checkListItemResponseDto);
-
-    }
-
-    // 체크리스트 조회
-    @GetMapping("/{roomCode}/{url}")
-    public ResponseEntity<List<CheckListItemResponseDto>> getCheckList(
-            @PathVariable String roomCode,
-            @PathVariable String url
-    ){
-        List<CheckListItemResponseDto> checkList = checkListService.getCheckList(roomCode, url);
-
-        return ResponseEntity.ok().body(checkList);
-    }
-
-    // 체크리스트 삭제
-    @DeleteMapping("/{roomCode}/{url}")
-    public ResponseEntity<Map<String, Object>> deleteCheckList(
-            @PathVariable String roomCode,
-            @PathVariable String url,
-            @RequestParam String checkListItemId
-    ) {
-
-        boolean deleted = checkListService.deleteCheckList(roomCode, url, checkListItemId);
-        return ResponseEntity.ok().body(Map.of(
-                "successes", deleted));
-    }
+//    // 체크리스트 조회
+//    @GetMapping("/{roomCode}/{url}")
+//    public ResponseEntity<List<CheckListItemResponseDto>> getCheckList(
+//            @PathVariable String roomCode,
+//            @PathVariable String url
+//    ){
+//        List<CheckListItemResponseDto> checkList = checkListService.getCheckList(roomCode, url);
+//
+//        return ResponseEntity.ok().body(checkList);
+//    }
+//
+//    // 체크리스트 삭제
+//    @DeleteMapping("/{roomCode}/{url}")
+//    public ResponseEntity<Map<String, Object>> deleteCheckList(
+//            @PathVariable String roomCode,
+//            @PathVariable String url,
+//            @RequestParam String checkListItemId
+//    ) {
+//
+//        boolean deleted = checkListService.deleteCheckList(roomCode, url, checkListItemId);
+//        return ResponseEntity.ok().body(Map.of(
+//                "successes", deleted));
+//    }
 }
