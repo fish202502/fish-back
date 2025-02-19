@@ -26,7 +26,7 @@ public class CheckListCategory {
     private final String id = UUID.randomUUID().toString();
 
     @Builder.Default
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<CheckListItem> checkListItemList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

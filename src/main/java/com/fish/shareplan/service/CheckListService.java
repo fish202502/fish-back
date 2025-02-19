@@ -185,18 +185,32 @@ public class CheckListService {
         return null;
     }
 
-//    // 체크리스트 삭제
-//    public boolean deleteCheckList(String roomCode, String url, String checkListId) {
-//        Room room = roomService.isValid(roomCode, url);
-//
-//        // 체크리스트가 존재하는 지 먼저 확인
-//        CheckListItem checkListItem = checkListItemRepository.findById(checkListId).orElseThrow(
-//                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
-//        );
-//
-//        checkListItemRepository.deleteById(checkListId);
-//
-//        return true;
-//    }
+    // 체크리스트 카테고리 삭제
+    public boolean deleteCategory(String roomCode, String url, String categoryId) {
+        Room room = roomService.isValid(roomCode, url);
+
+        // 체크리스트가 존재하는 지 먼저 확인
+        CheckListCategory category = checkListCategoryRepository.findById(categoryId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CHECKLIST_CATEGORY)
+        );
+
+        checkListCategoryRepository.deleteById(categoryId);
+
+        return true;
+    }
+
+    // 체크리스트 삭제
+    public boolean deleteCheckList(String roomCode, String url, String checkListId) {
+        Room room = roomService.isValid(roomCode, url);
+
+        // 체크리스트가 존재하는 지 먼저 확인
+        CheckListItem checkListItem = checkListItemRepository.findById(checkListId).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CHECKLIST)
+        );
+
+        checkListItemRepository.deleteById(checkListId);
+
+        return true;
+    }
 }
 
