@@ -32,6 +32,12 @@ public class Schedule {
     @Column(name = "created_at", nullable = false, updatable = false)
     private  LocalDateTime createdAt;
 
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
+
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
+
     @OneToMany(mappedBy = "schedule",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default
     private List<ScheduleItem> schedules = new ArrayList<>();
