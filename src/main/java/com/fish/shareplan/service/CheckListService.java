@@ -93,6 +93,7 @@ public class CheckListService {
         return CheckListItemResponseDto.builder()
                 .checkListItemId(checkListItem.getId())
                 .category(category.getContent())
+                .assignee(checkListItem.getAssignee())
                 .content(checkListItem.getContent())
                 .isChecked(checkListItem.getIsChecked())
                 .build();
