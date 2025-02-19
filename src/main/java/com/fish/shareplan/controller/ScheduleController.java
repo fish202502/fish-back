@@ -60,11 +60,11 @@ public class ScheduleController {
     }
 
     // 일정 삭제
-    @DeleteMapping("/{roomCode}/{url}")
+    @DeleteMapping("/{roomCode}/{url}/{scheduleItemId}")
     public ResponseEntity<Map<String, Object>> deleteSchedule(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @RequestParam String scheduleItemId
+            @PathVariable String scheduleItemId
     ) {
 
         boolean deleted = scheduleService.deleteSchedule(roomCode, url, scheduleItemId);

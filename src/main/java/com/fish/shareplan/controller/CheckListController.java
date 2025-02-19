@@ -98,11 +98,11 @@ public class CheckListController {
     }
 
     // 체크리스트 카테고리 삭제
-    @DeleteMapping("/category/{roomCode}/{url}")
+    @DeleteMapping("/category/{roomCode}/{url}/{categoryId}")
     public ResponseEntity<Map<String, Object>> deleteCategory(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @RequestParam String categoryId
+            @PathVariable String categoryId
     ) {
 
         boolean deleted = checkListService.deleteCategory(roomCode, url, categoryId);
@@ -111,11 +111,11 @@ public class CheckListController {
     }
 
     // 체크리스트 삭제
-    @DeleteMapping("/{roomCode}/{url}")
+    @DeleteMapping("/{roomCode}/{url}/{checkListItemId}")
     public ResponseEntity<Map<String, Object>> deleteCheckList(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @RequestParam String checkListItemId
+            @PathVariable String checkListItemId
     ) {
 
         boolean deleted = checkListService.deleteCheckList(roomCode, url, checkListItemId);

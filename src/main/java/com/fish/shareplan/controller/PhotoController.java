@@ -43,11 +43,11 @@ public class PhotoController {
         return ResponseEntity.ok().body(dtoList);
     }
 
-    @DeleteMapping("/{roomCode}/{url}")
+    @DeleteMapping("/{roomCode}/{url}/{photoId}")
     public ResponseEntity<?> deletePhoto(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @RequestParam String photoId
+            @PathVariable String photoId
     ){
 
         boolean deleted = photoService.deletePhoto(roomCode, url, photoId);
