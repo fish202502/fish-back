@@ -1,5 +1,6 @@
 package com.fish.shareplan.domain.expense.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fish.shareplan.domain.expense.entity.QExpenseItem;
 import com.querydsl.core.Tuple;
 import lombok.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @Builder
 public class ExpenseItemDto {
 
+    @JsonProperty("expenseItemId")
     private String expenseId;
 
     private String spender;
