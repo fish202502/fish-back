@@ -1,7 +1,9 @@
 package com.fish.shareplan.controller;
 
+import com.fish.shareplan.domain.checklist.dto.reponse.CheckListCategoryResponseDto;
 import com.fish.shareplan.domain.checklist.dto.reponse.CheckListItemResponseDto;
 import com.fish.shareplan.domain.checklist.dto.reponse.CheckListResponseDto;
+import com.fish.shareplan.domain.checklist.dto.request.CheckListCategoryRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import com.fish.shareplan.service.CheckListService;
@@ -21,6 +23,19 @@ import java.util.Map;
 public class CheckListController {
 
     private final CheckListService checkListService;
+
+        // 체크리스트 카테고리 추가
+        @PostMapping("/category/{roomCode}/{url}")
+    public ResponseEntity<CheckListCategoryResponseDto> addCheckList(
+            @PathVariable String roomCode,
+            @PathVariable String url,
+            @RequestBody CheckListCategoryRequestDto dto
+    ) {
+        CheckListCategoryResponseDto checkListItemResponseDto
+                = checkListService.addCheckListCategory(roomCode, url, dto);
+
+        return ResponseEntity.ok().body(checkListItemResponseDto);
+    }
 
 //    // 체크리스트 등록
 //    @PostMapping("/{roomCode}/{url}")

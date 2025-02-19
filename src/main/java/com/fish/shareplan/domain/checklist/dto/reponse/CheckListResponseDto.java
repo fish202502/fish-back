@@ -14,5 +14,5 @@ import java.util.List;
 public class CheckListResponseDto {
     private String checkListId;
 
-    private List<CheckListItemResponseDto> checkListItem;
+    private List<CheckListCategoryResponseDto> category;
 }
