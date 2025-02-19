@@ -8,9 +8,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -20,8 +18,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // 클라이언트가 연결되면 이름을 받거나 기본값을 설정
-        session.sendMessage(new TextMessage("Please provide your name:"));
+        // 연결 시 특별히 처리할 내용이 필요 없다면 그대로 두어도 됩니다.
     }
 
     @Override
@@ -35,14 +32,17 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
                 s.sendMessage(new TextMessage(userName + ": " + payload));
             }
         } else {
-            // 이름을 아직 받지 않은 경우
+            // 클라이언트에서 이름을 처음 전송하는 경우
             sessionUserMap.put(session, payload); // 클라이언트 이름 저장
-            session.sendMessage(new TextMessage("Welcome " + payload + "!"));
+            log.info("User '{}' connected", payload); // 로그로 사용자 이름 출력
+            // 처음 이름을 받은 후, 대화 시작 메시지 전송
+            session.sendMessage(new TextMessage("Welcome " + payload + "! Start chatting."));
         }
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessionUserMap.remove(session); // 연결 종료 시 이름 제거
+        log.info("User disconnected");
     }
 }
