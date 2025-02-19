@@ -206,7 +206,7 @@ public class ExpenseService {
     }
 
     // 지출 삭제
-    public boolean deleteSchedule(String roomCode, String url, String expenseId) {
+    public boolean deleteSchedule(String roomCode, String url, String expenseItemId) {
         Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_CODE)
         );
@@ -217,11 +217,11 @@ public class ExpenseService {
         }
 
         // 지출이 존재하는 지 먼저 확인
-        expenseRepository.findById(expenseId).orElseThrow(
+        expenseItemRepository.findById(expenseItemId).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_EXPENSE)
         );
 
-        expenseRepository.deleteById(expenseId);
+        expenseItemRepository.deleteById(expenseItemId);
 
         return true;
     }

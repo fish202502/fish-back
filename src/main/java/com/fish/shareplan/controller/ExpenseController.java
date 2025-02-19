@@ -73,10 +73,10 @@ public class ExpenseController {
     public ResponseEntity<Map<String, Object>> deleteSchedule(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @PathVariable String expenseId
+            @PathVariable String expenseItemId
     ) {
 
-        boolean deleted = expenseService.deleteSchedule(roomCode, url, expenseId);
+        boolean deleted = expenseService.deleteSchedule(roomCode, url, expenseItemId);
         return ResponseEntity.ok().body(Map.of(
                 "successes", deleted));
     }
