@@ -85,6 +85,18 @@ public class CheckListController {
         return ResponseEntity.ok().body(checkList);
     }
 
+    // 체크리스트 카테고리 조회
+    @GetMapping("/category/{roomCode}/{url}")
+    public ResponseEntity<List<CategoryResponseDto>> getCategoryList(
+            @PathVariable String roomCode,
+            @PathVariable String url
+    ){
+        List<CategoryResponseDto> category = checkListService.getCategory(roomCode, url);
+
+        return ResponseEntity.ok().body(category);
+    }
+
+
 //    // 체크리스트 삭제
 //    @DeleteMapping("/{roomCode}/{url}")
 //    public ResponseEntity<Map<String, Object>> deleteCheckList(

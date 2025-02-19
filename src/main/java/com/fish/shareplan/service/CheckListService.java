@@ -137,6 +137,22 @@ public class CheckListService {
 
     }
 
+    // 체크리스트 카테고리 조회
+    public List<CategoryResponseDto> getCategory(
+            String roomCode, String url
+    ) {
+        Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_CODE));
+
+        CheckList checkList = checkListRepository.findByRoomId(room.getId()).orElse(null);
+
+        if(checkList != null){
+            List<CheckListCategory> categoryList = checkList.getCheckListCategories();
+            return categoryList.stream().map(CheckListCategory::toDto).toList();
+        }
+        return null;
+    }
+
 
     // 체크리스트 조회
     public CheckListResponseDto getCheckList(
