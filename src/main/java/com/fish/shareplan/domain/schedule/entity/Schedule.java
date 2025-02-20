@@ -41,4 +41,9 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule",cascade = CascadeType.REMOVE,orphanRemoval = true)
     @Builder.Default
     private List<ScheduleItem> schedules = new ArrayList<>();
+
+    public void update(Schedule schedule){
+        this.startTime = schedule.getStartTime();
+        this.endTime = schedule.getEndTime();
+    }
 }

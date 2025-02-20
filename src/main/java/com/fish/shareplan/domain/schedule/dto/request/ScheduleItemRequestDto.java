@@ -1,9 +1,9 @@
 package com.fish.shareplan.domain.schedule.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import lombok.*;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -11,10 +11,16 @@ import lombok.*;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class ScheduleRequestDto {
+public class ScheduleItemRequestDto {
+
+    private String title;
+
+    private String content;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime startTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime endTime;
+
 }
