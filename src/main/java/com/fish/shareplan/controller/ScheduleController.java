@@ -68,15 +68,16 @@ public class ScheduleController {
 
     // 일정 수정
     @PutMapping("/{roomCode}/{url}")
-    public ResponseEntity<Map<String, String>> putSchedule(
+    public ResponseEntity<ScheduleItemResponseDto> putSchedule(
             @PathVariable String roomCode,
             @PathVariable String url,
             @RequestBody ScheduleUpdateRequestDto scheduleUpdateRequestDto
     ) {
 
-        String scheduleItemId = scheduleService.updateSchedule(roomCode, url, scheduleUpdateRequestDto);
-        return ResponseEntity.ok().body(Map.of("message", "일정이 수정되었습니다.",
-                "scheduleItemId", scheduleItemId));
+        ScheduleItemResponseDto scheduleItemResponseDto
+                = scheduleService.updateSchedule(roomCode, url, scheduleUpdateRequestDto);
+
+        return ResponseEntity.ok().body(scheduleItemResponseDto);
     }
 
     // 일정 삭제

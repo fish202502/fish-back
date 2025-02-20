@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ScheduleUpdateRequestDto {
 
-    private String id;
+    private String scheduleId;
 
     private String title;
 

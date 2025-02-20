@@ -102,7 +102,8 @@ public class ScheduleService {
     }
 
     // 일정 수정
-    public String updateSchedule(String roomCode, String url, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
+    public ScheduleItemResponseDto updateSchedule(String roomCode, String url
+            , ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
 
         // 권한 체크
         isValid(roomCode, url);
@@ -112,7 +113,7 @@ public class ScheduleService {
             throw new PostException(ErrorCode.INVALID_START_END_TIME);
         }
 
-        ScheduleItem scheduleItem = scheduleItemRepository.findById(scheduleUpdateRequestDto.getId())
+        ScheduleItem scheduleItem = scheduleItemRepository.findById(scheduleUpdateRequestDto.getScheduleId())
                 .orElseThrow(
                         () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
                 );
@@ -120,7 +121,7 @@ public class ScheduleService {
         scheduleItem.modify(scheduleUpdateRequestDto);
         scheduleItemRepository.save(scheduleItem);
 
-        return scheduleItem.getId();
+        return ScheduleItem.toDto(scheduleItem);
     }
 
     // 일정 삭제

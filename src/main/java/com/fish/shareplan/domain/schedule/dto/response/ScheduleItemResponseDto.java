@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ScheduleItemResponseDto {
 
-    private String id;
+    private String scheduleItemId;
 
     private String title;
 
@@ -29,7 +29,7 @@ public class ScheduleItemResponseDto {
     // Tuple을 DTO로 변환하는 메서드
     public static ScheduleItemResponseDto from(Tuple tuple) {
         return ScheduleItemResponseDto.builder()
-                .id(tuple.get(QSchedule.schedule.id))
+                .scheduleItemId(tuple.get(QScheduleItem.scheduleItem.id))
                 .title(tuple.get(QScheduleItem.scheduleItem.title))
                 .content(tuple.get(QScheduleItem.scheduleItem.content))
                 .startTime(tuple.get(QScheduleItem.scheduleItem.startTime))
