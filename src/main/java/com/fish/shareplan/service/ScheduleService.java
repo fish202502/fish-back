@@ -5,6 +5,7 @@ import com.fish.shareplan.domain.schedule.dto.request.ScheduleItemRequestDto;
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleRequestDto;
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleUpdateRequestDto;
 import com.fish.shareplan.domain.schedule.dto.response.ScheduleItemResponseDto;
+import com.fish.shareplan.domain.schedule.dto.response.ScheduleResponseDto;
 import com.fish.shareplan.domain.schedule.entity.Schedule;
 import com.fish.shareplan.domain.schedule.entity.ScheduleItem;
 import com.fish.shareplan.exception.ErrorCode;
@@ -91,14 +92,16 @@ public class ScheduleService {
 
 
     // 일정 조회
-    public List<ScheduleItemResponseDto> getSchedule(String roomCode, String url) {
+    public ScheduleResponseDto getSchedule(String roomCode, String url) {
 
         Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_CODE)
         );
-        String roomId = room.getId();
-
-        return scheduleRepository.findAllSchedule(roomId);
+        Schedule schedule = scheduleRepository.findByRoomId(room.getId()).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
+        );
+        List<ScheduleItem> scheduleItemList = scheduleItemRepository.findByScheduleId(schedule.getId());
+        return Schedule.toDto(schedule, scheduleItemList);
     }
 
     // 일정 수정

@@ -4,6 +4,7 @@ import com.fish.shareplan.domain.schedule.dto.request.ScheduleItemRequestDto;
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleRequestDto;
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleUpdateRequestDto;
 import com.fish.shareplan.domain.schedule.dto.response.ScheduleItemResponseDto;
+import com.fish.shareplan.domain.schedule.dto.response.ScheduleResponseDto;
 import com.fish.shareplan.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,13 +58,13 @@ public class ScheduleController {
 
     // 일정 조회
     @GetMapping("/{roomCode}/{url}")
-    public ResponseEntity<Map<String, Object>> getSchedule(
+    public ResponseEntity<ScheduleResponseDto> getSchedule(
             @PathVariable String roomCode,
             @PathVariable String url
     ) {
-        List<ScheduleItemResponseDto> schedule = scheduleService.getSchedule(roomCode, url);
+        ScheduleResponseDto scheduleResponseDto = scheduleService.getSchedule(roomCode, url);
 
-        return ResponseEntity.ok().body(Map.of("scheduleList", schedule));
+        return ResponseEntity.ok().body(scheduleResponseDto);
     }
 
     // 일정 수정
