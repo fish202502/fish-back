@@ -32,7 +32,7 @@ public class ScheduleService {
     private final ScheduleItemRepository scheduleItemRepository;
 
     // 일정 추가
-    public Map<String,String> addOrUpdateItinerary(String roomCode, String url, ScheduleRequestDto dto) {
+    public Map<String, String> addOrUpdateItinerary(String roomCode, String url, ScheduleRequestDto dto) {
 
         // 시작시간이 종료시간보다 후일 경우
         if (dto.getStartTime().isAfter(dto.getEndTime())) {
@@ -52,11 +52,11 @@ public class ScheduleService {
         // 이미 존재하면 업데이트
         if (foundSchedule != null) {
             foundSchedule.update(schedule);
-            return Map.of("U",foundSchedule.getId());
+            return Map.of("U", foundSchedule.getId());
             // 아니면 추가
         } else {
             scheduleRepository.save(schedule);
-            return Map.of("C",schedule.getId());
+            return Map.of("C", schedule.getId());
         }
     }
 
@@ -71,39 +71,24 @@ public class ScheduleService {
 
         Room room = isValid(roomCode, url);
 
-        Schedule foundSchedule = scheduleRepository.findByRoomId(room.getId()).orElse(null);
+        Schedule foundSchedule = scheduleRepository.findByRoomId(room.getId()).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
+        );
 
-        if (foundSchedule != null) {
+        if (foundSchedule.getId().equals(dto.getScheduleId())) {
             ScheduleItem scheduleItem = ScheduleItem.builder()
-                    .title(dto.getTitle())
-                    .content(dto.getContent())
-                    .startTime(dto.getStartTime())
-                    .endTime(dto.getEndTime())
                     .schedule(foundSchedule)
-                    .build();
-
-            scheduleItemRepository.save(scheduleItem);
-            return scheduleItem.getId();
-
-            // 체크리스트가 최초 생성되었을때
-        } else {
-            Schedule schedule = Schedule.builder()
-                    .room(isValid(roomCode, url))
-                    .build();
-            scheduleRepository.save(schedule);
-
-            ScheduleItem scheduleItem = ScheduleItem.builder()
                     .title(dto.getTitle())
                     .content(dto.getContent())
                     .startTime(dto.getStartTime())
                     .endTime(dto.getEndTime())
-                    .schedule(schedule)
                     .build();
-
             scheduleItemRepository.save(scheduleItem);
             return scheduleItem.getId();
         }
+        throw new PostException(ErrorCode.FAIL_TO_RESISTER);
     }
+
 
     // 일정 조회
     public List<ScheduleItemResponseDto> getSchedule(String roomCode, String url) {

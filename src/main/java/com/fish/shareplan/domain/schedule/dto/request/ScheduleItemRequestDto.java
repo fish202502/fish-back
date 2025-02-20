@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ScheduleItemRequestDto {
 
+    private String scheduleId;
+
     private String title;
 
     private String content;

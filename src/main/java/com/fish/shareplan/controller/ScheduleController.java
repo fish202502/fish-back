@@ -21,7 +21,7 @@ public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
-    // 여행 일정 추가
+    // 여행 일정 추가 및 수정
     @PostMapping("/trip/{roomCode}/{url}")
     public ResponseEntity<Map<String, String>> addItinerary(
             @PathVariable String roomCode,
