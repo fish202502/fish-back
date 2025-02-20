@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fish.shareplan.domain.chat.entity.ChatMessage;
 import com.fish.shareplan.domain.chat.entity.ChatRoom;
+import com.fish.shareplan.exception.ErrorCode;
+import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.ChatMessageRepository;
 import com.fish.shareplan.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,9 +30,14 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final Map<WebSocketSession, String> sessionUserMap = new HashMap<>(); // 세션과 이름 매핑
 
+
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        String path = session.getUri().getPath();
+        String roomCode = path.substring(path.lastIndexOf('/') + 1);
 
+        // 세션에 연결된 사용자 정보 저장
+        sessionUserMap.put(session, ""); // 이름은 나중에 handleTextMessage에서 설정
     }
 
     @Override
@@ -38,52 +46,64 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
         // JSON으로 파싱
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> data
-                = objectMapper.readValue(payload, new TypeReference<Map<String, String>>() {
+        Map<String, String> data = objectMapper.readValue(payload, new TypeReference<Map<String, String>>() {
         });
-        log.info("test data : {}",data);
 
         String name = data.get("name");
         String roomCode = data.get("roomCode");
         String textMessage = data.get("message");
 
-        // 서버에서 받은 데이터로 처리 (예: 로그로 출력)
-        System.out.println("Received name: " + name + ", roomCode: " + roomCode);
+        log.info("Received data - Name: {}, RoomCode: {}, Message: {}", name, roomCode, textMessage);
 
-        if (sessionUserMap.containsKey(session)) {
-            // 이름을 이미 받은 경우
-            String userName = sessionUserMap.get(session);
-            for (WebSocketSession s : sessionUserMap.keySet()) {
-                s.sendMessage(new TextMessage(userName + ": " + textMessage));
-            }
-
-            // DB 저장
-            ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElse(
-                    chatRoomRepository.save(ChatRoom.builder()
-                            .roomCode(roomCode)
-                            .build())
-            );
-
-            ChatMessage chatMessage = ChatMessage.builder()
-                    .chatRoom(chatRoom)
-                    .sender(name)
-                    .message(textMessage)
-                    .build();
-            chatMessageRepository.save(chatMessage);
-
-        } else {
-            // 클라이언트에서 이름을 처음 전송하는 경우
+        // 클라이언트에서 이름을 처음 전송하는 경우
+        if (sessionUserMap.containsKey(session) && sessionUserMap.get(session).isEmpty()) {
             sessionUserMap.put(session, name); // 클라이언트 이름 저장
             log.info("User '{}' connected", name); // 로그로 사용자 이름 출력
-            // 처음 이름을 받은 후, 대화 시작 메시지 전송
+
+            // 기존 메시지들만 보내도록 변경 (새로 접속한 클라이언트에게만 이전 메시지를 전송)
+            ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElseThrow(
+                    () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+            );
+            List<ChatMessage> messageList = chatMessageRepository.findByChatRoom_RoomCode(roomCode);
+
+            // 기존 메시지를 해당 세션에 전송
+            for (ChatMessage chatMessage : messageList) {
+                String existingMessage = chatMessage.getSender() + ": " + chatMessage.getMessage();
+                session.sendMessage(new TextMessage(existingMessage));
+            }
+
+            // 대화 시작 메시지 전송
             session.sendMessage(new TextMessage("안녕하세요😊 " + name + "님!"));
         }
-    }
 
+        // 연결된 세션들에 메시지 전송
+        for (WebSocketSession s : sessionUserMap.keySet()) {
+            if(textMessage==null) return;
+            s.sendMessage(new TextMessage(name + ": " + textMessage));
+        }
+
+        // DB에 메시지 저장
+        ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElse(null);
+        if (chatRoom == null) {
+            chatRoom = ChatRoom.builder()
+                    .roomCode(roomCode)
+                    .build();
+            chatRoomRepository.save(chatRoom);
+        }
+
+        ChatMessage chatMessage = ChatMessage.builder()
+                .chatRoom(chatRoom)
+                .sender(name)
+                .message(textMessage)
+                .build();
+        chatMessageRepository.save(chatMessage);
+    }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessionUserMap.remove(session); // 연결 종료 시 이름 제거
-        log.info("User disconnected");
+        String userName = sessionUserMap.get(session);
+        sessionUserMap.remove(session); // 연결 종료 시 세션과 이름 제거
+        log.info("User '{}' disconnected", userName);
     }
+
 }
