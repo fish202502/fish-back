@@ -64,7 +64,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElseThrow(
                     () -> new PostException(ErrorCode.NOT_FOUND_CODE)
             );
-            List<ChatMessage> messageList = chatMessageRepository.findByChatRoom_RoomCode(roomCode);
+            List<ChatMessage> messageList = chatMessageRepository.findByChatRoom_RoomCodeOrderBySentAtAsc(roomCode);
 
             // 기존 메시지를 해당 세션에 전송
             for (ChatMessage chatMessage : messageList) {
