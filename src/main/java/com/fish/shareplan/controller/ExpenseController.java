@@ -69,7 +69,7 @@ public class ExpenseController {
     }
 
     // 지출 삭제
-    @DeleteMapping("/{roomCode}/{url}/{expenseId}")
+    @DeleteMapping("/{roomCode}/{url}/{expenseItemId}")
     public ResponseEntity<Map<String, Object>> deleteSchedule(
             @PathVariable String roomCode,
             @PathVariable String url,
