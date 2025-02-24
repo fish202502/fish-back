@@ -10,6 +10,7 @@ public class CrossOriginConfig implements WebMvcConfigurer {
             "http://localhost:3001",
             "http://localhost:3000",
             "http://localhost:5175",
+            "http://localhost:5173",
     };
     @Override
     public void addCorsMappings(CorsRegistry registry) {

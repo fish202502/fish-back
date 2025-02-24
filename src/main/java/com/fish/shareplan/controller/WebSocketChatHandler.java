@@ -53,6 +53,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         String roomCode = data.get("roomCode");
         String textMessage = data.get("message");
 
+        String sessionId = session.getId();
+
         log.info("Received data - Name: {}, RoomCode: {}, Message: {}", name, roomCode, textMessage);
 
         // 클라이언트에서 이름을 처음 전송하는 경우
@@ -68,7 +70,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
             // 기존 메시지를 해당 세션에 전송
             for (ChatMessage chatMessage : messageList) {
-                String existingMessage = chatMessage.getSender() + ": " + chatMessage.getMessage();
+                String existingMessage = chatMessage.getSender() + ": " + sessionId + ":" + chatMessage.getMessage();
                 session.sendMessage(new TextMessage(existingMessage));
             }
 
@@ -78,8 +80,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
         // 연결된 세션들에 메시지 전송
         for (WebSocketSession s : sessionUserMap.keySet()) {
-            if(textMessage==null) return;
-            s.sendMessage(new TextMessage(name + ": " + textMessage));
+            if (textMessage == null) return;
+            s.sendMessage(new TextMessage(name + ": " + sessionId + ":" + textMessage));
         }
 
         // DB에 메시지 저장
