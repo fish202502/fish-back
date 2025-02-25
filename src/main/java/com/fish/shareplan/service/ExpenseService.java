@@ -176,13 +176,13 @@ public class ExpenseService {
     // 지출 내역 수정
     public ExpenseItemDto updateExpense(
             String roomCode, String url
-            , String expenseId
+            , String expenseItemId
             , List<MultipartFile> images
             , ExpenseRequestDto expenseRequestDto) {
 
         isValid(roomCode, url);
 
-        ExpenseItem expense = expenseItemRepository.findById(expenseId).orElseThrow(
+        ExpenseItem expense = expenseItemRepository.findById(expenseItemId).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_EXPENSE)
         );
 
