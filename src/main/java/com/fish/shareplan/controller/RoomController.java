@@ -36,7 +36,7 @@ public class RoomController {
         // 쓰기 권한 - true / 읽기 권한 - false
         boolean editPermission = roomService.hasEditPermission(roomCode, url);
 
-        String permission = editPermission ? "read" : "writer";
+        String permission = editPermission ? "writer" : "read";
 
         return ResponseEntity.ok().body(
                 Map.of("permission",permission

@@ -65,8 +65,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             log.info("User '{}' connected", name); // 로그로 사용자 이름 출력
 
             // 기존 메시지들만 보내도록 변경 (새로 접속한 클라이언트에게만 이전 메시지를 전송)
-            ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElseThrow(
-                    () -> new PostException(ErrorCode.NOT_FOUND_CODE)
+            ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElse(
+                    ChatRoom.builder().roomCode(roomCode).build()
             );
             List<ChatMessage> messageList = chatMessageRepository.findByChatRoom_RoomCodeOrderBySentAtAsc(roomCode);
 
@@ -80,9 +80,16 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
             }
 
             // 대화 시작 메시지 전송
-            String existingMessage
-                    = ChatResponseDto.toMessageDto(
-                    name, sessionId, "안녕하세요😊 " + name + "님!", "H");
+            String existingMessage;
+            if(name.equals("permission-false")){
+                existingMessage = ChatResponseDto.toMessageDto(
+                        name, sessionId, "읽기전용입니다.", "H");
+
+            }else {
+                existingMessage = ChatResponseDto.toMessageDto(
+                        name, sessionId, "안녕하세요😊 " + name + "님!", "H");
+
+            }
             session.sendMessage(new TextMessage(existingMessage));
         }
 
