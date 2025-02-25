@@ -5,6 +5,19 @@ server:
 # database setting
 spring:
 
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: riyo1753@naver.com
+    password: PD3859M7XWCJ
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+
   #file upload setting
   servlet:
     multipart:

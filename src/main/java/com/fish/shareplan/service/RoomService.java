@@ -1,14 +1,18 @@
 package com.fish.shareplan.service;
 
 import com.fish.shareplan.domain.room.dto.RoomResponseDto;
+import com.fish.shareplan.domain.room.dto.request.SendEmailRequestDto;
 import com.fish.shareplan.domain.room.entity.Room;
 import com.fish.shareplan.enums.ChangeType;
 import com.fish.shareplan.exception.ErrorCode;
 import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.RoomRepository;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,11 @@ import java.util.UUID;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+
+    @Value("${spring.mail.username}")
+    private String mailHost;
+    // 이메일 발송을 위한 객체
+    private final JavaMailSender mailSender;
 
     // 방 생성
     public RoomResponseDto createRoom() {
@@ -115,5 +124,46 @@ public class RoomService {
 
     public static String generateRoomCode() {
         return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+
+    // 이메일로 방번호 발송하기
+    public void sendEmail(SendEmailRequestDto dto) {
+
+        // 메일 전송 로직
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper messageHelper
+                    = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+
+            // 누구에게 이메일을 보낼지
+            messageHelper.setTo(dto.getEmail());
+
+            // 누가 보내는 건지
+            messageHelper.setFrom(mailHost);
+
+            // 이메일 제목 설정
+            messageHelper.setSubject("생성된 url 정보입니다.");
+            // 이메일 내용 설정
+            messageHelper.setText(
+                    "<div style=\"font-family: Arial, sans-serif; font-size: 16px; color: #333;\">" +
+                    "<p>방번호: <b style=\"font-size: 18px; color: #007bff;\">" + dto.getRoomCode() + "</b></p>" +
+                    "<p>읽기전용 URL: <a href=\"" + dto.getReadUrl() + "\" style=\"color: #28a745;\">" + dto.getReadUrl() + "</a></p>" +
+                    "<p>수정가능 URL: <a href=\"" + dto.getWriteUrl() + "\" style=\"color: #dc3545;\">" + dto.getWriteUrl() + "</a></p>" +
+                    "</div>",
+                    true
+            );
+
+            // 메일 보내기
+            mailSender.send(mimeMessage);
+
+            log.info("{} 님에게 이메일이 발송되었습니다.", dto.getEmail());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("메일 발송에 실패했습니다.");
+        }
+
     }
 }
