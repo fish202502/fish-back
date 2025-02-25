@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -95,7 +96,9 @@ public class PhotoService {
 
         if (photo != null) {
             List<ImageUrl> imageUrls = photo.getImageUrl();
-            return imageUrls.stream().map(ImageUrl::toDto).toList();
+            return imageUrls.stream()
+                    .sorted(Comparator.comparing(ImageUrl::getCreatedAt))
+                    .map(ImageUrl::toDto).toList();
         } else {
             return new ArrayList<>();
         }
