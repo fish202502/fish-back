@@ -31,6 +31,9 @@ public class ChatMessage {
     @Column(name = "message", columnDefinition = "TEXT", nullable = false)
     private String message; // 메시지 내용
 
+    @Column(name = "session_id")
+    private String sessionId; // 세션이름
+
     @CreationTimestamp
     @Column(name = "sent_at", nullable = false)
     private LocalDateTime sentAt; // 보낸 시간

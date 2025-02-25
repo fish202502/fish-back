@@ -2,6 +2,7 @@ package com.fish.shareplan.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fish.shareplan.domain.chat.dto.response.ChatResponseDto;
 import com.fish.shareplan.domain.chat.entity.ChatMessage;
 import com.fish.shareplan.domain.chat.entity.ChatRoom;
 import com.fish.shareplan.exception.ErrorCode;
@@ -30,6 +31,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final Map<WebSocketSession, String> sessionUserMap = new HashMap<>(); // 세션과 이름 매핑
 
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -70,18 +72,27 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
             // 기존 메시지를 해당 세션에 전송
             for (ChatMessage chatMessage : messageList) {
-                String existingMessage = chatMessage.getSender() + ": " + sessionId + ":" + chatMessage.getMessage();
+//                String existingMessage = chatMessage.getSender() + ": " + sessionId + ":" + chatMessage.getMessage();
+                String existingMessage
+                        = ChatResponseDto.toMessageDto(
+                        chatMessage.getSender(), chatMessage.getSessionId(), chatMessage.getMessage(), "M");
                 session.sendMessage(new TextMessage(existingMessage));
             }
 
             // 대화 시작 메시지 전송
-            session.sendMessage(new TextMessage("안녕하세요😊 " + name + "님!"));
+            String existingMessage
+                    = ChatResponseDto.toMessageDto(
+                    name, sessionId, "안녕하세요😊 " + name + "님!", "H");
+            session.sendMessage(new TextMessage(existingMessage));
         }
 
         // 연결된 세션들에 메시지 전송
         for (WebSocketSession s : sessionUserMap.keySet()) {
             if (textMessage == null) return;
-            s.sendMessage(new TextMessage(name + ": " + sessionId + ":" + textMessage));
+            String existingMessage
+                    = ChatResponseDto.toMessageDto(
+                    name, sessionId, textMessage, "M");
+            s.sendMessage(new TextMessage(existingMessage));
         }
 
         // DB에 메시지 저장
@@ -97,6 +108,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
                 .chatRoom(chatRoom)
                 .sender(name)
                 .message(textMessage)
+                .sessionId(sessionId)
                 .build();
         chatMessageRepository.save(chatMessage);
     }
