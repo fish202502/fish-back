@@ -176,19 +176,19 @@ public class ExpenseService {
     // 지출 내역 수정
     public ExpenseItemDto updateExpense(
             String roomCode, String url
-            , String expenseId
+            , String expenseItemId
             , List<MultipartFile> images
             , ExpenseRequestDto expenseRequestDto) {
 
         isValid(roomCode, url);
 
-        ExpenseItem expense = expenseItemRepository.findById(expenseId).orElseThrow(
+        ExpenseItem expense = expenseItemRepository.findById(expenseItemId).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_EXPENSE)
         );
 
         // 이미지 수정이 필요할 때 삭제 후 다시 save
         if (images != null && !images.isEmpty()) {
-            receiptImageRepository.deleteByExpenseItemId(expense.getExpense().getId());
+            receiptImageRepository.deleteByExpenseItemId(expense.getId());
             List<ReceiptImage> imageList = processImages(images, expenseRequestDto, expense);
 
             expense.update(expenseRequestDto);
