@@ -192,6 +192,7 @@ public class ExpenseService {
             List<ReceiptImage> imageList = processImages(images, expenseRequestDto, expense);
 
             expense.update(expenseRequestDto);
+            expenseItemRepository.save(expense);
 
             ExpenseItemDto dto = ExpenseItem.toDto(expense);
             dto.setReceiptList(imageList.stream().map(ReceiptImage::toDto).toList());
