@@ -1,6 +1,7 @@
 package com.fish.shareplan.controller;
 
 import com.fish.shareplan.domain.room.dto.RoomResponseDto;
+import com.fish.shareplan.domain.room.dto.request.SendEmailRequestDto;
 import com.fish.shareplan.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,5 +53,15 @@ public class RoomController {
         RoomResponseDto roomResponseDto = roomService.changeUrl(roomCode, url, type);
 
         return ResponseEntity.ok().body(roomResponseDto);
+    }
+
+    // url 메일 전송
+    @PostMapping("/mail")
+    public ResponseEntity<?> sendEmail(
+            @RequestBody SendEmailRequestDto dto
+            ){
+        roomService.sendEmail(dto);
+
+        return ResponseEntity.ok().body(Map.of("success",true));
     }
 }
