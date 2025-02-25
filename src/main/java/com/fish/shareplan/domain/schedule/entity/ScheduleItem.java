@@ -1,6 +1,7 @@
 package com.fish.shareplan.domain.schedule.entity;
 
 import com.fish.shareplan.domain.schedule.dto.request.ScheduleUpdateRequestDto;
+import com.fish.shareplan.domain.schedule.dto.response.ScheduleItemResponseDto;
 import lombok.*;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -56,6 +57,15 @@ public class ScheduleItem {
         this.startTime = dto.getStartTime();
         this.endTime = dto.getEndTime();
         this.updatedAt = LocalDateTime.now();
+    }
+    public static ScheduleItemResponseDto toDto(ScheduleItem scheduleItem){
+        return ScheduleItemResponseDto.builder()
+                .scheduleItemId(scheduleItem.getId())
+                .title(scheduleItem.getTitle())
+                .content(scheduleItem.getContent())
+                .startTime(scheduleItem.getStartTime())
+                .endTime(scheduleItem.getEndTime())
+                .build();
     }
 
 }

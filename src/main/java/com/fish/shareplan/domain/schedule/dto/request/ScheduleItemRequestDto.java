@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class ScheduleUpdateRequestDto {
+public class ScheduleItemRequestDto {
 
     private String scheduleId;
 

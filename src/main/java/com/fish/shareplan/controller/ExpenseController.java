@@ -53,23 +53,23 @@ public class ExpenseController {
     }
 
     // 지출 내용 수정
-    @PutMapping("/{roomCode}/{url}/{expenseId}")
+    @PutMapping("/{roomCode}/{url}/{expenseItemId}")
     public ResponseEntity<ExpenseItemDto> updateExpense(
             @PathVariable String roomCode,
             @PathVariable String url,
-            @PathVariable String expenseId,
+            @PathVariable String expenseItemId,
             @RequestPart("expense") ExpenseRequestDto expenseRequestDto,
             @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) {
 
         ExpenseItemDto expenseItemDto
-                = expenseService.updateExpense(roomCode, url, expenseId, images, expenseRequestDto);
+                = expenseService.updateExpense(roomCode, url, expenseItemId, images, expenseRequestDto);
 
         return ResponseEntity.ok().body(expenseItemDto);
     }
 
     // 지출 삭제
-    @DeleteMapping("/{roomCode}/{url}/{expenseId}")
+    @DeleteMapping("/{roomCode}/{url}/{expenseItemId}")
     public ResponseEntity<Map<String, Object>> deleteSchedule(
             @PathVariable String roomCode,
             @PathVariable String url,

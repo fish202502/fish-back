@@ -38,6 +38,8 @@ public enum ErrorCode {
     NOT_FOUND_CHECKLIST(HttpStatus.NOT_FOUND, "조회되지 않는 체크리스트입니다."),
     NOT_FOUND_CHECKLIST_CATEGORY(HttpStatus.NOT_FOUND, "조회되지 않는 체크리스트의 카테고리입니다."),
 
+    // 등록실패 오류
+    FAIL_TO_RESISTER(HttpStatus.BAD_REQUEST,"등록에 실패했습니다."),
     ;
 
     private final HttpStatus status;
