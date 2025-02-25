@@ -188,11 +188,10 @@ public class ExpenseService {
 
         // 이미지 수정이 필요할 때 삭제 후 다시 save
         if (images != null && !images.isEmpty()) {
-            receiptImageRepository.deleteByExpenseItemId(expense.getExpense().getId());
+            receiptImageRepository.deleteByExpenseItemId(expense.getId());
             List<ReceiptImage> imageList = processImages(images, expenseRequestDto, expense);
 
             expense.update(expenseRequestDto);
-            expenseItemRepository.save(expense);
 
             ExpenseItemDto dto = ExpenseItem.toDto(expense);
             dto.setReceiptList(imageList.stream().map(ReceiptImage::toDto).toList());
