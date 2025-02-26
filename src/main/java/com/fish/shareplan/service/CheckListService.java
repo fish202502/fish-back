@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -150,8 +151,9 @@ public class CheckListService {
         if(checkList != null){
             List<CheckListCategory> categoryList = checkList.getCheckListCategories();
             return categoryList.stream().map(CheckListCategory::toDto).toList();
+        }else{
+         return new ArrayList<>();
         }
-        return null;
     }
 
 
@@ -183,7 +185,7 @@ public class CheckListService {
                     .category(categoryDtoList)
                     .build();
         }
-        return null;
+        return CheckListResponseDto.builder().build();
     }
 
     // 체크리스트 카테고리 삭제
