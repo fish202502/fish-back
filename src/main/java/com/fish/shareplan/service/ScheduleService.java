@@ -97,10 +97,8 @@ public class ScheduleService {
         Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_CODE)
         );
-        Schedule schedule = scheduleRepository.findByRoomId(room.getId()).orElse(
-               Schedule.builder()
-                       .room(room)
-                       .build()
+        Schedule schedule = scheduleRepository.findByRoomId(room.getId()).orElseThrow(
+                () -> new PostException(ErrorCode.NOT_FOUND_SCHEDULE)
         );
         List<ScheduleItem> scheduleItemList = scheduleItemRepository.findByScheduleId(schedule.getId());
         return Schedule.toDto(schedule, scheduleItemList);
