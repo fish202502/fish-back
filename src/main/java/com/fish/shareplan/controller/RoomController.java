@@ -20,7 +20,7 @@ public class RoomController {
 
     // 방 생성
     @PostMapping
-    public ResponseEntity<RoomResponseDto> createRoom(){
+    public ResponseEntity<RoomResponseDto> createRoom() {
 
         RoomResponseDto room = roomService.createRoom();
 
@@ -29,18 +29,18 @@ public class RoomController {
 
     // 권한 조회
     @PostMapping("/{roomCode}/{url}")
-    public ResponseEntity<Map<String,Object>> permissionCheck(
+    public ResponseEntity<Map<String, Object>> permissionCheck(
             @PathVariable String roomCode,
             @PathVariable String url
-    ){
+    ) {
         // 쓰기 권한 - true / 읽기 권한 - false
         boolean editPermission = roomService.hasEditPermission(roomCode, url);
 
         String permission = editPermission ? "writer" : "read";
 
         return ResponseEntity.ok().body(
-                Map.of("permission",permission
-                        ,"type",editPermission));
+                Map.of("permission", permission
+                        , "type", editPermission));
     }
 
     // 방 url 변경
@@ -49,7 +49,7 @@ public class RoomController {
             @PathVariable String roomCode,
             @PathVariable String url,
             @RequestParam String type
-    ){
+    ) {
         RoomResponseDto roomResponseDto = roomService.changeUrl(roomCode, url, type);
 
         return ResponseEntity.ok().body(roomResponseDto);
@@ -59,9 +59,20 @@ public class RoomController {
     @PostMapping("/mail")
     public ResponseEntity<?> sendEmail(
             @RequestBody SendEmailRequestDto dto
-            ){
+    ) {
         roomService.sendEmail(dto);
 
-        return ResponseEntity.ok().body(Map.of("success",true));
+        return ResponseEntity.ok().body(Map.of("success", true));
+    }
+
+    // 방 삭제
+    @DeleteMapping("/{roomCode}/{url}")
+    public ResponseEntity<?> deleteRoom(
+            @PathVariable String roomCode,
+            @PathVariable String url
+    ) {
+        boolean success = roomService.deleteRoom(roomCode, url);
+
+        return ResponseEntity.ok().body(Map.of("success", true));
     }
 }

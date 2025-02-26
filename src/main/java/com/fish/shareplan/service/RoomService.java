@@ -166,4 +166,12 @@ public class RoomService {
         }
 
     }
+
+    public boolean deleteRoom(String roomCode, String url) {
+        Room room = isValid(roomCode, url);
+
+        roomRepository.delete(room);
+
+        return true;
+    }
 }
