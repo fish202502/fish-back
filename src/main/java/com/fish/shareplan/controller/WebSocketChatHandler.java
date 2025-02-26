@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fish.shareplan.domain.chat.dto.response.ChatResponseDto;
 import com.fish.shareplan.domain.chat.entity.ChatMessage;
 import com.fish.shareplan.domain.chat.entity.ChatRoom;
+import com.fish.shareplan.domain.room.entity.Room;
 import com.fish.shareplan.exception.ErrorCode;
 import com.fish.shareplan.exception.PostException;
 import com.fish.shareplan.repository.ChatMessageRepository;
 import com.fish.shareplan.repository.ChatRoomRepository;
+import com.fish.shareplan.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,8 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatMessageRepository chatMessageRepository;
+
+    private final RoomRepository roomRepository;
 
     private final Map<WebSocketSession, String> sessionUserMap = new HashMap<>(); // 세션과 이름 매핑
 
@@ -59,16 +63,19 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
 
         log.info("Received data - Name: {}, RoomCode: {}, Message: {}", name, roomCode, textMessage);
 
+        Room room = roomRepository.findByRoomCode(roomCode).orElse(null);
+
         // 클라이언트에서 이름을 처음 전송하는 경우
         if (sessionUserMap.containsKey(session) && sessionUserMap.get(session).isEmpty()) {
             sessionUserMap.put(session, name); // 클라이언트 이름 저장
             log.info("User '{}' connected", name); // 로그로 사용자 이름 출력
 
             // 기존 메시지들만 보내도록 변경 (새로 접속한 클라이언트에게만 이전 메시지를 전송)
-            ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElse(
-                    ChatRoom.builder().roomCode(roomCode).build()
+            ChatRoom chatRoom = chatRoomRepository.findByRoomId(room.getId()).orElse(
+                    ChatRoom.builder().roomId(room.getId()).build()
             );
-            List<ChatMessage> messageList = chatMessageRepository.findByChatRoom_RoomCodeOrderBySentAtAsc(roomCode);
+            List<ChatMessage> messageList
+                    = chatMessageRepository.findByChatRoom_RoomIdOrderBySentAtAsc(room.getId());
 
             // 기존 메시지를 해당 세션에 전송
             for (ChatMessage chatMessage : messageList) {
@@ -103,10 +110,10 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         }
 
         // DB에 메시지 저장
-        ChatRoom chatRoom = chatRoomRepository.findByRoomCode(roomCode).orElse(null);
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(room.getId()).orElse(null);
         if (chatRoom == null) {
             chatRoom = ChatRoom.builder()
-                    .roomCode(roomCode)
+                    .roomId(room.getId())
                     .build();
             chatRoomRepository.save(chatRoom);
         }

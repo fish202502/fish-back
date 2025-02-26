@@ -1,5 +1,10 @@
 package com.fish.shareplan.domain.room.entity;
 
+import com.fish.shareplan.domain.chat.entity.ChatRoom;
+import com.fish.shareplan.domain.checklist.entity.CheckList;
+import com.fish.shareplan.domain.expense.entity.Expense;
+import com.fish.shareplan.domain.photo.entity.Photo;
+import com.fish.shareplan.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +38,18 @@ public class Room {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private final LocalDateTime createdAt = LocalDateTime.now();  // 생성 시간 (현재 시간)
+
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Expense expense;
+
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Photo photo;
+
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CheckList checkList;
+
+    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Schedule schedule;
 
     public static String generateUrl() {
         long timestamp = System.currentTimeMillis();

@@ -23,8 +23,8 @@ public class ChatRoom {
     @Column(name = "id", length = 36, nullable = false)
     private final String id = UUID.randomUUID().toString(); // 방 번호 (UUID)
 
-    @Column(name = "room_code", nullable = false)
-    private String roomCode; // 방코드
+    @Column(name = "room_id", nullable = false)
+    private String roomId;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

@@ -1,11 +1,13 @@
 package com.fish.shareplan.service;
 
+import com.fish.shareplan.domain.chat.entity.ChatRoom;
 import com.fish.shareplan.domain.room.dto.RoomResponseDto;
 import com.fish.shareplan.domain.room.dto.request.SendEmailRequestDto;
 import com.fish.shareplan.domain.room.entity.Room;
 import com.fish.shareplan.enums.ChangeType;
 import com.fish.shareplan.exception.ErrorCode;
 import com.fish.shareplan.exception.PostException;
+import com.fish.shareplan.repository.ChatRoomRepository;
 import com.fish.shareplan.repository.RoomRepository;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ import java.util.UUID;
 public class RoomService {
 
     private final RoomRepository roomRepository;
+
+    private final ChatRoomRepository chatRoomRepository;
 
     @Value("${spring.mail.username}")
     private String mailHost;
@@ -185,6 +189,10 @@ public class RoomService {
     public boolean deleteRoom(String roomCode, String url) {
         Room room = isValid(roomCode, url);
 
+        ChatRoom chatRoom = chatRoomRepository.findByRoomId(room.getId()).orElse(null);
+        if(chatRoom !=null){
+            chatRoomRepository.delete(chatRoom);
+        }
         roomRepository.delete(room);
 
         return true;

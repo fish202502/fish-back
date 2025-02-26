@@ -29,7 +29,7 @@ public class Photo {
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     @Builder.Default
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "photoAlbum")
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.REMOVE,  mappedBy = "photoAlbum")
     private List<ImageUrl> imageUrl = new ArrayList<>();
 
 }
