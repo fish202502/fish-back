@@ -34,13 +34,9 @@ public class RoomController {
             @PathVariable String url
     ) {
         // 쓰기 권한 - true / 읽기 권한 - false
-        boolean editPermission = roomService.hasEditPermission(roomCode, url);
+        Map<String, Object> permission = roomService.hasEditPermission(roomCode, url);
 
-        String permission = editPermission ? "writer" : "read";
-
-        return ResponseEntity.ok().body(
-                Map.of("permission", permission
-                        , "type", editPermission));
+        return ResponseEntity.ok().body(permission);
     }
 
     // 방 url 변경

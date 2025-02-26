@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -38,13 +39,27 @@ public class RoomService {
     }
 
     // 권한 조회
-    public boolean hasEditPermission(String roomCode, String url) {
+    public Map<String, Object> hasEditPermission(String roomCode, String url) {
 
         Room room = roomRepository.findByRoomCode(roomCode).orElseThrow(
                 () -> new PostException(ErrorCode.NOT_FOUND_CODE)
         );
+
+        if(!url.equals(room.getWriteUrl()) && !url.equals(room.getReadUrl())){
+            throw new PostException(ErrorCode.NOT_FOUND_CODE);
+        }
+        boolean permissionFlag = url.equals(room.getWriteUrl());
+
+        String permission = permissionFlag ? "writer" : "read";
+
         // 쓰기 권한 - true / 읽기 권한 - false
-        return url.equals(room.getWriteUrl());
+        return Map.of(
+                "permission", permission,
+                "type", permissionFlag,
+                "roomCode", room.getRoomCode(),
+                "readUrl", room.getReadUrl(),
+                "writeUrl",room.getWriteUrl()
+        );
     }
 
     //권한 체크 메서드
