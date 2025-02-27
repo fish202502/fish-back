@@ -66,7 +66,7 @@ public class WebSocketChatHandler extends TextWebSocketHandler {
         Room room = roomRepository.findByRoomCode(roomCode).orElse(null);
 
         // 클라이언트에서 이름을 처음 전송하는 경우
-        if (sessionUserMap.containsKey(session) && sessionUserMap.get(session).isEmpty()) {
+        if (sessionUserMap.get(session).isEmpty()) {
             sessionUserMap.put(session, name); // 클라이언트 이름 저장
             log.info("User '{}' connected", name); // 로그로 사용자 이름 출력
 
