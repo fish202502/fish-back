@@ -19,9 +19,9 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         Info info = new Info()
-                .title("LetYoGo")
+                .title("ManGo")
                 .version("v1.0")
-                .description("LetYoGo API 문서입니다.");
+                .description("ManGo API 문서입니다.");
 //                .license(new License()
 //                        .name("Apache License Version 2.0")
 //                        .url("http://www.apache.org/licenses/LICENSE-2.0"));

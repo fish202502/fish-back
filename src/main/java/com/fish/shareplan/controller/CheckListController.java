@@ -7,6 +7,8 @@ import com.fish.shareplan.domain.checklist.dto.request.CategoryRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListCreateRequestDto;
 import com.fish.shareplan.domain.checklist.dto.request.CheckListRequestDto;
 import com.fish.shareplan.service.CheckListService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,11 @@ public class CheckListController {
 
     private final CheckListService checkListService;
 
-        // 체크리스트 카테고리 추가
-        @PostMapping("/category/{roomCode}/{url}")
+
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 카테고리 추가", description = "💡체크리스트의 카테고리를 추가합니다.")
+    // 체크리스트 카테고리 추가
+    @PostMapping("/category/{roomCode}/{url}")
     public ResponseEntity<CategoryResponseDto> addCheckList(
             @PathVariable String roomCode,
             @PathVariable String url,
@@ -36,6 +41,9 @@ public class CheckListController {
         return ResponseEntity.ok().body(checkListItemResponseDto);
     }
 
+
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 추가", description = "💡체크리스트를 추가합니다.")
     // 체크리스트 등록
     @PostMapping("/{roomCode}/{url}")
     public ResponseEntity<CheckListItemResponseDto> addCheckList(
@@ -48,6 +56,8 @@ public class CheckListController {
         return ResponseEntity.ok().body(checkListItemResponseDto);
     }
 
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 카테고리 수정", description = "💡체크리스트의 카테고리를 수정합니다.")
     // 체크리스트 카테고리 수정
     @PutMapping("/category/{roomCode}/{url}")
     public ResponseEntity<CategoryResponseDto> updateCheckList(
@@ -62,6 +72,8 @@ public class CheckListController {
 
     }
 
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 수정", description = "💡체크리스트를 수정합니다.")
     // 체크리스트 수정
     @PutMapping("/{roomCode}/{url}")
     public ResponseEntity<CheckListItemResponseDto> updateCheckList(
@@ -75,28 +87,35 @@ public class CheckListController {
 
     }
 
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 목록 조회", description = "💡체크리스트의 목록을 가져옵니다.")
     // 체크리스트 조회
     @GetMapping("/{roomCode}/{url}")
     public ResponseEntity<CheckListResponseDto> getCheckList(
             @PathVariable String roomCode,
             @PathVariable String url
-    ){
+    ) {
         CheckListResponseDto checkList = checkListService.getCheckList(roomCode, url);
 
         return ResponseEntity.ok().body(checkList);
     }
 
+
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 카테고리 목록 조회", description = "💡체크리스트의 카테고리 목록을 가져옵니다.")
     // 체크리스트 카테고리 조회
     @GetMapping("/category/{roomCode}/{url}")
     public ResponseEntity<List<CategoryResponseDto>> getCategoryList(
             @PathVariable String roomCode,
             @PathVariable String url
-    ){
+    ) {
         List<CategoryResponseDto> category = checkListService.getCategory(roomCode, url);
 
         return ResponseEntity.ok().body(category);
     }
 
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 카테고리 삭제", description = "💡체크리스트의 카테고리를 삭제합니다.")
     // 체크리스트 카테고리 삭제
     @DeleteMapping("/category/{roomCode}/{url}/{categoryId}")
     public ResponseEntity<Map<String, Object>> deleteCategory(
@@ -110,6 +129,8 @@ public class CheckListController {
                 "successes", deleted));
     }
 
+    @Tag(name = "체크리스트", description = "체크리스트 관련 API")
+    @Operation(summary = "체크리스트 삭제", description = "💡체크리스트를 삭제합니다.")
     // 체크리스트 삭제
     @DeleteMapping("/{roomCode}/{url}/{checkListItemId}")
     public ResponseEntity<Map<String, Object>> deleteCheckList(
